@@ -91,8 +91,8 @@ abstract class Apolo_Component_Formulator_Template
     public function renderDefaultElement(Apolo_Component_Formulator_Element $element)
     {
         $type = $element->getType();
-        if (array_key_exists($type, $this->templates)) {
-            $template = $this->templates[$type] . PHP_EOL;
+        if (array_key_exists(strtolower($type), $this->templates)) {
+            $template = $this->templates[strtolower($type)] . PHP_EOL;
         } else if (isset($this->templates['default'])) {
             $template = $this->templates['default'] . PHP_EOL;
         } else {

@@ -4,8 +4,16 @@ class Apolo_Component_Formulator_Template_Default
     extends Apolo_Component_Formulator_Template
 {
     public $templates = array(
-        'citystate'  => '{elements}',
-        'repetition' => '
+        'table'         => '{open_table}{elements}{close_table}',
+        'table_row'     => '{open_tr}{elements}{close_tr}',
+        'table_column'  => '{open_td}{elements}{close_td}',
+        'table_heading' => '{open_th}{elements}{close_th}',
+        'table_tbody'   => '{open_tbody}{elements}{close_tbody}',
+        'table_thead'   => '{open_thead}{elements}{close_thead}',
+        'table_tfooter' => '{open_tfooter}{elements}{close_tfooter}',
+
+        'citystate'     => '{elements}',
+        'repetition'    => '
                          <div class="fieldset_wrap">
                              {fieldsetopen}
                                 <legend>
@@ -21,7 +29,7 @@ class Apolo_Component_Formulator_Template_Default
                              {fieldsetclose}
                          </div>
                         ',
-        'phoneGroup' => '
+        'phonegroup'    => '
                          <div class="fieldset_wrap">
                              <fieldset>
                                  <legend>
@@ -37,16 +45,16 @@ class Apolo_Component_Formulator_Template_Default
                              </fieldset>
                          </div>
                         ',
-        'button'     => '<button{attrs}>{label}</button>',
-        'hidden'     => '{input}',
-        'radio'      => '<label class="radio">{input} {label}</label>',
-        'checkbox'   => '<label class="checkbox">{input} {label}</label>',
-        'fieldset'   => "<div class=\"fieldset_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
-        'address'    => "<div class=\"address_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
-        'checkboxgroup'   => "<div class=\"checkbox_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
-        'radiogroup'   => "<div class=\"radio_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
-        'html'       => '{content}',
-        'default'    => "<label{class}>\n<span>{label}</span>:\n{input}\n</label>",
+        'button'        => '<button{attrs}>{label}</button>',
+        'hidden'        => '{input}',
+        'radio'         => '<label class="radio">{input} {label}</label>',
+        'checkbox'      => '<label class="checkbox">{input} {label}</label>',
+        'fieldset'      => "<div class=\"fieldset_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
+        'address'       => "<div class=\"address_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
+        'checkboxgroup' => "<div class=\"checkbox_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
+        'radiogroup'    => "<div class=\"radio_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
+        'html'          => '{content}',
+        'default'       => "<label{class}>\n<span>{label}</span>:\n{input}\n</label>",
     );
 
     public function templateText($template, $element)

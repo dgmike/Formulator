@@ -266,16 +266,21 @@ class Apolo_Component_Formulator
         if (!preg_match('@^[a-z_]+$@i', $element['type'])) {
             throw new Exception('Invalid element type');
         }
+        $file = $element['type'];
+        $file = preg_replace('@_(\w)@e', 'strtoupper("/\\1")', strtolower($file));
         $file = 'Element'
               . DIRECTORY_SEPARATOR
-              . ucfirst(strtolower($element['type']))
+              . ucfirst($file)
               . '.php';
         if (!file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . $file)) {
             throw new Exception('Element file not found: '.$file);
         }
         include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . $file;
-        $className = 'Apolo_Component_Formulator_Element_'
-                   . ucfirst(strtolower($element['type']));
+        $className = preg_replace(
+            '@_(\w)@e', 'strtoupper("_\\1")',
+            ucfirst(strtolower($element['type']))
+        );
+        $className = 'Apolo_Component_Formulator_Element_' . $className;
         if (!class_exists($className)) {
             throw new Exception('Class not defined: ' . $className);
         }

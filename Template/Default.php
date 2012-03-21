@@ -10,7 +10,7 @@ class Apolo_Component_Formulator_Template_Default
         'table_heading' => '{open_th}{elements}{close_th}',
         'table_tbody'   => '{open_tbody}{elements}{close_tbody}',
         'table_thead'   => '{open_thead}{elements}{close_thead}',
-        'table_tfooter' => '{open_tfooter}{elements}{close_tfooter}',
+        'table_tfoot'   => '{open_tfoot}{elements}{close_tfoot}',
 
         'citystate'     => '{elements}',
         'repetition'    => '

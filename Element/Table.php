@@ -4,7 +4,7 @@ class Apolo_Component_Formulator_Element_Table
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
-    private $_parts = array('thead', 'tfooter', 'tbody');
+    private $_parts = array('thead', 'tfoot', 'tbody');
 
     public function setElement()
     {

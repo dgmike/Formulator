@@ -29,14 +29,38 @@
  */
 abstract class Apolo_Component_Formulator_Template
 {
+    /**
+     * @var int $counter counter used in some templates
+     */
     public $counter   = 0;
+
+    /**
+     * List of templates
+     *
+     * Each key is the name of object used in Formulator. The key needs to
+     * be a string in lowercase.
+     *
+     * @var array $templates
+     */
     public $templates = array(
         'hidden'   => '{input}',
         'fieldset' => "{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}",
         'default'  => '{label}: {input}',
     );
+
+    /**
+     * @var array $media Public of stored extenal contents, like CSS or JavaScript
+     */
     public $media = array();
 
+    /**
+     * Renders the open form
+     *
+     * You need to pass the formulator object to render
+     *
+     * @param Apolo_Component_Formulator $form the form to use
+     * @return string
+     */
     public function renderOpenForm(Apolo_Component_Formulator $form)
     {
         return '<form'.$this->makeAttributes($form->getConfig()).'>' . PHP_EOL;

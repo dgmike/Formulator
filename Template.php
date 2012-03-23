@@ -1,5 +1,32 @@
 <?php
+/**
+ * Formulator Template
+ *
+ * This is part of Formulator Component and can't be sold separately.
+ *
+ * PHP Version 5.2
+ *
+ * @category  Component
+ * @package   Component
+ * @author    Michael Granados <michaelgranados@corp.virgula.com.br>
+ * @copyright 2011-2012 Virgula S/A
+ * @license   Virgula Copyright
+ */
 
+/**
+ * Formulator Template
+ * 
+ * This abstract class render your form using a basic template of any kind
+ * of element used by Formulator Component.
+ *
+ * @category   Template
+ * @package    Formulator
+ * @subpackage Core
+ * @author     Michael Granados <michaelgranados@corp.virgula.com.br>
+ * @author     Michell Campos <michell@corp.virgula.com.br>
+ * @copyright  2011-2012 Virgula S/A
+ * @license    Virgula Copyright
+ */
 abstract class Apolo_Component_Formulator_Template
 {
     public $counter   = 0;

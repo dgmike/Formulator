@@ -11,6 +11,7 @@
  * @author    Michael Granados <michaelgranados@corp.virgula.com.br>
  * @copyright 2011-2012 Virgula S/A
  * @license   Virgula Copyright
+ * @link       http://virgula.uol.com.br
  */
 
 /**
@@ -26,6 +27,7 @@
  * @author     Michell Campos <michell@corp.virgula.com.br>
  * @copyright  2011-2012 Virgula S/A
  * @license    Virgula Copyright
+ * @link       http://virgula.uol.com.br
  */
 abstract class Apolo_Component_Formulator_Template
 {
@@ -44,7 +46,9 @@ abstract class Apolo_Component_Formulator_Template
      */
     public $templates = array(
         'hidden'   => '{input}',
-        'fieldset' => "{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}",
+        'fieldset' => '
+            {fieldsetopen}<legend>{legend}</legend>{elements}{fieldsetclose}
+        ',
         'default'  => '{label}: {input}',
     );
 
@@ -59,6 +63,7 @@ abstract class Apolo_Component_Formulator_Template
      * You need to pass the formulator object to render
      *
      * @param Apolo_Component_Formulator $form the form to use
+     *
      * @return string
      */
     public function renderOpenForm(Apolo_Component_Formulator $form)
@@ -66,10 +71,32 @@ abstract class Apolo_Component_Formulator_Template
         return '<form'.$this->makeAttributes($form->getConfig()).'>' . PHP_EOL;
     }
 
+    /**
+     * Make all atrributes
+     *
+     * Converts an associative set/array to html element attributes
+     *
+     * Sample:
+     * <pre>
+     * // $fTemplate = new Apolo_Component_Formulator_Template
+     * $config = array(
+     *     'class' => 'simple space',
+     *     'name'  => 'person',
+     *     'style' => 'background: url("image.png")',
+     * );
+     * print $fTemplate->makeAttributes($config);
+     * // clas="simple space" name="person" 
+     * // style="background: url(&quot;image.png&quot;)"
+     * </pre>
+     *
+     * @param array $config Configurations
+     *
+     * @return string
+     */
     public function makeAttributes(array $config)
     {
         $attributes = array();
-        foreach($config as $key => $value) {
+        foreach ($config as $key => $value) {
             if (!is_string($value)) {
                 continue;
             }
@@ -80,12 +107,26 @@ abstract class Apolo_Component_Formulator_Template
         }
     }
 
-
+    /**
+     * Renders the close form
+     *
+     * @param Apolo_Component_Formulator $form Form configuration
+     *
+     * @return string
+     */
     public function renderCloseForm(Apolo_Component_Formulator $form)
     {
         return '</form>';
     }
 
+    /**
+     * Renderizes the media objects to use in head tags
+     * 
+     * @param Apolo_Component_Formulator $form Form configuration
+     * @param string                     $area Area to render: js/css
+     *
+     * @return string
+     */
     public function renderMedia(Apolo_Component_Formulator $form, $area)
     {
         if (!$this->media) {
@@ -96,7 +137,7 @@ abstract class Apolo_Component_Formulator_Template
                 'js'  => '<script type="text/javascript" src="%s/%s/%s"></script>',
             );
             foreach (array('css', 'js') as $type) {
-                foreach($media[$type] as $item) {
+                foreach ($media[$type] as $item) {
                     $_media[$type][] = sprintf($template[$type], null, $type, $item);
                 }
             }
@@ -107,10 +148,20 @@ abstract class Apolo_Component_Formulator_Template
         }
     }
 
+    /**
+     * render elements
+     *
+     * Makes a loop over all elements in array set
+     * 
+     * @param array $elements set of elements
+     *
+     * @uses  Apolo_Component_Formulator_Template::renderElement()
+     * @return string
+     */
     final public function render(array $elements)
     {
         $result = '';
-        foreach($elements as $element) {
+        foreach ($elements as $element) {
             $part = $this->renderElement($element);
             $result .= $part;
         }
@@ -128,6 +179,18 @@ abstract class Apolo_Component_Formulator_Template
         return $elements[0]->attrs['input'];
     }*/
 
+    /**
+     * renderizes an element
+     *
+     * Tryes to render an element based on his type. If exists an method called
+     * 'render{ElementType}' this method is called instead. Othercase uses the
+     * renderDefaultElement method.
+     *
+     * @param Apolo_Component_Formulator_Element $element Formulator Element
+     *
+     * @uses Apolo_Component_Formulator_Element::renderDefaultElement()
+     * @return string
+     */
     final public function renderElement(Apolo_Component_Formulator_Element $element)
     {
         $type = $element->getType();
@@ -139,6 +202,14 @@ abstract class Apolo_Component_Formulator_Template
         return $this->renderDefaultElement($element);
     }
 
+    /**
+     * renders default element 
+     * 
+     * @param Apolo_Component_Formulator_Element $element Element to render
+     *
+     * @uses Apolo_Component_Formulator_Template::template()
+     * @return string
+     */
     public function renderDefaultElement(Apolo_Component_Formulator_Element $element)
     {
         $type = $element->getType();
@@ -159,6 +230,14 @@ abstract class Apolo_Component_Formulator_Template
         return $this->template($template, $element);
     }
 
+    /**
+     * The render base
+     * 
+     * @param string                             $template The name of template
+     * @param Apolo_Component_Formulator_Element $element  The element to render
+     *
+     * @return void
+     */
     public function template($template, Apolo_Component_Formulator_Element $element)
     {
         if (isset($element->elements)) {
@@ -168,7 +247,7 @@ abstract class Apolo_Component_Formulator_Template
         if (isset($element->subElements)) {
             if ('array' === gettype($element->subElements)) {
                 $elements = array();
-                foreach($element->subElements as $subElement) {
+                foreach ($element->subElements as $subElement) {
                     $elements[] = $this->render($subElement->getElements());
                 }
                 $elements = implode('', $elements);
@@ -182,8 +261,11 @@ abstract class Apolo_Component_Formulator_Template
         $template = str_replace('{counter}', $this->counter(), $template);
         $template = str_replace('{uniqid}', uniqid(), $template);
         preg_match_all('@{\w+}@', $template, $matches);
+        $validStringElements = array(
+            '{elements}', '{uniqid}', '{counter}', '{validation}'
+        );
         foreach ($matches[0] as $item) {
-            if (in_array($item, array('{elements}', '{uniqid}', '{counter}', '{validation}'))) {
+            if (in_array($item, $validStringElements)) {
                 continue;
             }
             $method = substr($item, 1, -1);
@@ -193,8 +275,15 @@ abstract class Apolo_Component_Formulator_Template
         return $template;
     }
 
+    /**
+     * counter
+     *
+     * Returns odd or even over the counter object
+     *
+     * @return string
+     */
     public function counter()
     {
-        return $this->counter++ % 2 ? 'odd' : 'event';
+        return $this->counter++ % 2 ? 'odd' : 'even';
     }
 }

@@ -16,6 +16,13 @@
  */
 
 /**
+ * Defining default timezone if not setted in php.ini
+ */
+if (!ini_get('date.timezone')) {
+    date_default_timezone_set('America/Sao_Paulo');
+}
+
+/**
  * loading abstract classes used in background
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Element.php';
@@ -92,6 +99,7 @@ class Apolo_Component_Formulator
      * <code>
      * $form = new Apolo_Component_Formulator(array(
      *     'method' => 'post',
+     *     'target' => '_blank',
      * ));
      * </code>
      *
@@ -106,9 +114,13 @@ class Apolo_Component_Formulator
     {
         $this->_form = $this;
         $args = func_get_args();
-        if (isset($args[0]) && !array_key_exists('type', $args)) {
+        $is_config_present = (isset($args[0]) && !isset($args[0][0]));
+        $config_is_null = (array_key_exists(0, $args) && null == $args[0]);
+        if ($is_config_present || $config_is_null) {
             $config = array_shift($args);
-            $this->config($config);
+            if ($config) {
+                $this->config($config);
+            }
         }
         $this->addElements($args);
     }
@@ -180,7 +192,7 @@ class Apolo_Component_Formulator
             $this->addElements($config['elements']);
             unset($config['elements']);
         }
-        $this->_config = $config;
+        $this->_config = $config + $this->_config;
         return $this;
     }
 
@@ -189,8 +201,8 @@ class Apolo_Component_Formulator
      * This method reset the form with your config and elements 
      * 
      * {@internal
-     * when we create these subelements need to have the information
-     * fomuário page. Internally subelements have an object
+     * when we create these subelements need to have the form page
+     * information. Internally subelements have an object
      * form for each element. This element has all the
      * element settings page. To retrieve this information,
      * this method is used internally.
@@ -205,6 +217,16 @@ class Apolo_Component_Formulator
     public function setForm($form)
     {
         $this->_form = $form;
+    }
+
+    /**
+     * Just to read the form attributes
+     *
+     * @return array
+     */
+    public function getForm()
+    {
+        return $this->_form;
     }
 
     /**
@@ -285,9 +307,8 @@ class Apolo_Component_Formulator
             throw new Exception('Class not defined: ' . $className);
         }
         $reflectionClass = new ReflectionClass($className);
-
         $this->_elements[] = $reflectionClass->newInstance(
-            $element, &$this->_values, &$this->_form
+            $element, $this->_values, $this->_form
         );
 
         return $this;

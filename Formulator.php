@@ -16,13 +16,6 @@
  */
 
 /**
- * Defining default timezone if not setted in php.ini
- */
-if (!ini_get('date.timezone')) {
-    date_default_timezone_set('America/Sao_Paulo');
-}
-
-/**
  * loading abstract classes used in background
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Element.php';

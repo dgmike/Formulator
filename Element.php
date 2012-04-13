@@ -83,8 +83,10 @@ abstract class Apolo_Component_Formulator_Element
     protected $element = array();
     protected $values = array(); 
 
-    public function __construct($element, array &$values, &$form)
+    // public function __construct($element, array $values, $form)
+    public function __construct($element)
     {
+    	return;
         $this->form    =& $form;
         $this->element =  $element;
 
@@ -104,7 +106,7 @@ abstract class Apolo_Component_Formulator_Element
             );
             $reflectionClass = new ReflectionClass(get_class($form));
             $this->elements = $reflectionClass->newInstanceArgs();
-            $this->elements->setForm(&$form);
+            $this->elements->setForm($form);
             $this->elements->config($config);
         }
     }

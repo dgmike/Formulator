@@ -31,6 +31,8 @@
  */
 abstract class Apolo_Component_Formulator_Template
 {
+    private $_form = null;
+
     /**
      * @var int $counter counter used in some templates
      */
@@ -57,6 +59,11 @@ abstract class Apolo_Component_Formulator_Template
      */
     public $media = array();
 
+    public function setForm(Apolo_Component_Formulator $form)
+    {
+        $this->_form = $form;
+    }
+
     /**
      * Renders the open form
      *
@@ -66,9 +73,9 @@ abstract class Apolo_Component_Formulator_Template
      *
      * @return string
      */
-    public function renderOpenForm(Apolo_Component_Formulator $form)
+    public function renderOpenForm()
     {
-        return '<form'.$this->makeAttributes($form->getConfig()).'>' . PHP_EOL;
+        return '<form'.$this->makeAttributes($this->_form->getConfig()).'>' . PHP_EOL;
     }
 
     /**
@@ -114,7 +121,7 @@ abstract class Apolo_Component_Formulator_Template
      *
      * @return string
      */
-    public function renderCloseForm(Apolo_Component_Formulator $form)
+    public function renderCloseForm()
     {
         return '</form>';
     }
@@ -127,10 +134,10 @@ abstract class Apolo_Component_Formulator_Template
      *
      * @return string
      */
-    public function renderMedia(Apolo_Component_Formulator $form, $area)
+    public function renderMedia($area)
     {
         if (!$this->media) {
-            $media  = $form->getMedia();
+            $media  = $this->_form->getMedia();
             $_media = array('css' => array(), 'js' => array());
             $template = array(
                 'css' => '<link rel="stylesheet" href="%s/%s/%s">',
@@ -158,8 +165,9 @@ abstract class Apolo_Component_Formulator_Template
      * @uses  Apolo_Component_Formulator_Template::renderElement()
      * @return string
      */
-    final public function render(array $elements)
+    final public function render()
     {
+    	return;
         $result = '';
         foreach ($elements as $element) {
             $part = $this->renderElement($element);

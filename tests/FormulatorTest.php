@@ -397,6 +397,7 @@ class Apolo_Component_FormulatorTest
      */
     public function testAddElement4($type, $file)
     {
+        $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
         $this->setExpectedException(
             'DomainException', 
             "Element file not found: $file"

@@ -294,7 +294,7 @@ class Apolo_Component_Formulator
         );
         $file = 'Element' . DIRECTORY_SEPARATOR . ucfirst($file) . '.php';
         $file = preg_replace(
-            '@' . DIRECTORY_SEPARATOR . '+@', DIRECTORY_SEPARATOR, $file
+            '@\\' . DIRECTORY_SEPARATOR . '+@', DIRECTORY_SEPARATOR, $file
         );
         if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
             throw new DomainException('Element file not found: ' . $file);
@@ -318,9 +318,9 @@ class Apolo_Component_Formulator
 
     public function setTemplate($template)
     {
-    	if (is_object($template)) {
-    		$this->_template = $template;
-        	return;
+        if (is_object($template)) {
+            $this->_template = $template;
+            return;
         }
         if (!preg_match('@^[a-z][a-z0-9]*$@i', $template)) {
             throw new InvalidArgumentException('Invalid template name');

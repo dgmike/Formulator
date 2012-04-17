@@ -336,14 +336,8 @@ class Apolo_Component_Formulator
             }
             include $file;
         }
-        /*
-        if (!class_exists($object)) {
-            throw new InvalidArgumentException(
-                'Invalid template name. Class not found: ' . $object
-            );
-        }
-        */
-        $this->_template = new $object;
+        $reflectionClass = new ReflectionClass($object);
+        $this->_template = $reflectionClass->newInstance();
     }
 
     public function getTemplate()
@@ -373,8 +367,8 @@ class Apolo_Component_Formulator
         if ($this->_template == null) {
             include_once __DIR__ . DIRECTORY_SEPARATOR . 'Template/Default.php';
             $this->_template = new Apolo_Component_Formulator_Template_Default;
-            $this->_template->setForm($this);
         }
+        $this->_template->setForm($this);
         $form = array(
             'mediaJS'   => implode('', $this->_template->renderMedia('js')),
             'mediaCSS'  => implode('', $this->_template->renderMedia('css')),

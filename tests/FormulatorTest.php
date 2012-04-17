@@ -465,7 +465,7 @@ class Apolo_Component_FormulatorTest
 
     public function newMockTemplate() {
         $template = $this->getMock('stdClass', array(
-            'render', 'renderMedia', 'renderOpenForm', 'renderCloseForm'
+            'render', 'renderMedia', 'renderOpenForm', 'renderCloseForm', 'setForm'
         ));
         $template->expects($this->once())
                  ->method('render')
@@ -485,6 +485,10 @@ class Apolo_Component_FormulatorTest
         $template->expects($this->once())
                  ->method('renderCloseForm')
                  ->will($this->returnValue('</form>'));
+
+        $template->expects($this->once())
+                 ->method('setForm');
+
         return $template;
     }
 

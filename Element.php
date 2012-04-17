@@ -18,49 +18,7 @@
  * @link       http://virgula.uol.com.br
  */
 
-/**
- * Formulator Component Formulator Element Interface
- * 
- * This Class has a indice with the methods to be used by another class 
- *
- * @category   Component
- * @package    Formulator
- * @subpackage Core
- * @author     Michael Granados <michaelgranados@corp.virgula.com.br>
- * @author     Michell Campos <michell@corp.virgula.com.br>
- * @copyright  2011-2012 Virgula S/A
- * @license    Virgula Copyright
- * @link       http://virgula.uol.com.br
- */
-interface Apolo_Component_Formulator_ElementInterface
-{
-    /**
-     * This method can set an element if this class was implemented in another 
-     * class 
-     * 
-     * @example ./Element/Textarea.php
-     *
-     * @return void
-     */
-    public function setElement();
-
-    /**
-     * makeAttributes 
-     * 
-     * @return void
-     */
-    public function makeAttributes();
-
-    /**
-     * getValue 
-     * 
-     * @param mixed $attribute 
-     * @param mixed $escaped 
-     *
-     * @return void
-     */
-    public function getValue($attribute = true, $escaped = true);
-}
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'ElementInterface.php';
 
 /**
  * Formulator Component Formulator Element

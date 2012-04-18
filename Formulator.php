@@ -275,6 +275,12 @@ class Apolo_Component_Formulator
      */
     public function addElement(array $element)
     {
+        $this->_elements[] = Apolo_Component_Formulator::element($element);
+        return $this;
+    }
+
+    static public function element(array $element)
+    {
         if (empty($element['type'])) {
             throw new InvalidArgumentException(
                 'The element has no "type" defined'
@@ -312,8 +318,7 @@ class Apolo_Component_Formulator
             throw new DomainException('Class not defined: ' . $className);
         }
         $reflectionClass = new ReflectionClass($className);
-        $this->_elements[] = $reflectionClass->newInstance($element);
-        return $this;
+        return $reflectionClass->newInstance($element);
     }
 
     public function setTemplate($template)

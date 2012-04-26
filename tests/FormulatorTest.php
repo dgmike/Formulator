@@ -1,9 +1,4 @@
 <?php
-/**
- * Requiring configurations
- */
-require_once __DIR__ . '/config.php';
-
 class Apolo_Component_FormulatorTest 
     extends PHPUnit_Framework_TestCase
 {

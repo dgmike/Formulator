@@ -1,0 +1,23 @@
+<phpunit
+    bootstrap="tests/bootstrap.php"
+    colors="true"
+    strict="true"
+    >
+    <testsuites>
+        <testsuite name="Formulator">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="coverage-html"
+             target="coverage" 
+             charset="utf-8" 
+             yui="true" 
+             highlight="true" />
+    </logging>
+    <filter>
+        <blacklist>
+            <directory>tests</directory>
+        </blacklist>
+    </filter>
+</phpunit>

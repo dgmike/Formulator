@@ -135,7 +135,8 @@ class Apolo_Component_FormulatorTest
             $config['method'], 'post', 'The method was setted'
         );
         $this->assertEquals(
-            $config['action'], '/my/custom/url/' . $uniqId, 'The action was setted'
+            $config['action'], '/my/custom/url/' . $uniqId,
+            'The action was setted'
         );
     }
 
@@ -157,7 +158,8 @@ class Apolo_Component_FormulatorTest
         ));
         $config = $this->object->getConfig();
         $this->assertEquals(
-            $config['action'], '/my/custom/url/' . $uniqId, 'The action not changed'
+            $config['action'], '/my/custom/url/' . $uniqId,
+            'The action not changed'
         );
         $this->assertEquals(
             $config['id'], 'myID', 'New value for ID'
@@ -249,9 +251,11 @@ class Apolo_Component_FormulatorTest
     }
 
     /**
+     * @deprecated 2012-04-19
+     *
      * @covers Apolo_Component_Formulator::setForm
      * @covers Apolo_Component_Formulator::getForm
-     */
+     * /
     public function testSetFormJustNeedsToPassTheArguments()
     {
         $form = array(
@@ -263,6 +267,7 @@ class Apolo_Component_FormulatorTest
             $form, $newForm, 'Just pass the config..'
         );
     }
+    */
 
     /**
      * @covers Apolo_Component_Formulator::config
@@ -282,6 +287,8 @@ class Apolo_Component_FormulatorTest
     /**
      * @covers Apolo_Component_Formulator::addElements
      * @covers Apolo_Component_Formulator::getElements
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      */
     public function testAddElements()
     {
@@ -294,6 +301,8 @@ class Apolo_Component_FormulatorTest
     /**
      * @covers Apolo_Component_Formulator::addElements
      * @covers Apolo_Component_Formulator::getElements
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      */
     public function testAddElements2()
     {
@@ -311,6 +320,8 @@ class Apolo_Component_FormulatorTest
     /**
      * @covers Apolo_Component_Formulator::addElements
      * @covers Apolo_Component_Formulator::getElements
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      */
     public function testAddElements3()
     {
@@ -332,6 +343,8 @@ class Apolo_Component_FormulatorTest
     /**
      * @covers Apolo_Component_Formulator::addElement
      * @covers Apolo_Component_Formulator::getElements
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      */
     public function testAddElement()
     {
@@ -353,6 +366,8 @@ class Apolo_Component_FormulatorTest
 
     /**
      * @covers Apolo_Component_Formulator::addElement
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      * @expectedException        InvalidArgumentException
      * @expectedExceptionMessage The element has no "type" defined
      */
@@ -363,6 +378,8 @@ class Apolo_Component_FormulatorTest
 
     /**
      * @covers Apolo_Component_Formulator::addElement
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      * @dataProvider             invalidTypeArguments
      * @expectedException        InvalidArgumentException
      * @expectedExceptionMessage Invalid element "type"
@@ -385,6 +402,7 @@ class Apolo_Component_FormulatorTest
             array('*name'),
             array('my type'),
             array('_my_new_type'), // starts with underline
+            array('my_new_type_'), // ends with underline
             array('a'),            // one character
             array('\\name'),       // invalid character
             array('nam/e'),        // invalid character
@@ -393,14 +411,15 @@ class Apolo_Component_FormulatorTest
 
     /**
      * @covers Apolo_Component_Formulator::addElement
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      * @dataProvider typeTestFiles
      */
     public function testAddElement4($type, $file)
     {
         $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
         $this->setExpectedException(
-            'DomainException', 
-            "Element file not found: $file"
+            'PHPUnit_Framework_Error_Warning'
         );
         $this->object->addElement(array(
             'type' => $type,
@@ -414,13 +433,13 @@ class Apolo_Component_FormulatorTest
             array('invalid_filename',   'Element/Invalid/Filename.php'),
             array('invalidFilename',    'Element/Invalid/Filename.php'),
             array('invalid__Filename',  'Element/Invalid/Filename.php'),
-            array('invalid__Filename_', 'Element/Invalid/Filename.php'),
-            array('InvalidFilename_',   'Element/Invalid/Filename.php'),
         );
     }
 
     /**
      * @covers Apolo_Component_Formulator::addElement
+     * @covers Apolo_Component_Formulator::element
+     * @covers Apolo_Component_Formulator::retriveFileClass4Element
      * @dataProvider typeTestClass
      */
     public function testAddElement5($type, $className)
@@ -444,11 +463,22 @@ class Apolo_Component_FormulatorTest
     public function typeTestClass()
     {
         return array(
-            array('invalidclass', 'Apolo_Component_Formulator_Element_Invalidclass'),
-            array('invalidClass', 'Apolo_Component_Formulator_Element_Invalid_Class'),
-            array('invalid_class', 'Apolo_Component_Formulator_Element_Invalid_Class'),
-            array('invalid__class', 'Apolo_Component_Formulator_Element_Invalid_Class'),
-            array('invalid_class_', 'Apolo_Component_Formulator_Element_Invalid_Class'),
+            array(
+                'invalidclass',
+                'Apolo_Component_Formulator_Element_Invalidclass'
+            ),
+            array(
+                'invalidClass',
+                'Apolo_Component_Formulator_Element_Invalid_Class'
+            ),
+            array(
+                'invalid_class',
+                'Apolo_Component_Formulator_Element_Invalid_Class'
+            ),
+            array(
+                'invalid__class',
+                'Apolo_Component_Formulator_Element_Invalid_Class'
+            ),
         );
     }
 
@@ -457,15 +487,17 @@ class Apolo_Component_FormulatorTest
      * @covers Apolo_Component_Formulator::setTemplate
      * @dataProvider gerenateMockTemplateAndTenderTypes
      */
-    public function testRender($mock, $area)
+    public function testRender($mock, $area, $expected)
     {
         $this->object->setTemplate($mock);
         $output = $this->object->render($area);
+        $this->assertEquals($output, $expected);
     }
 
     public function newMockTemplate() {
         $template = $this->getMock('stdClass', array(
-            'render', 'renderMedia', 'renderOpenForm', 'renderCloseForm', 'setForm'
+            'render', 'renderMedia', 'renderOpenForm', 'renderCloseForm',
+            'setForm'
         ));
         $template->expects($this->once())
                  ->method('render')
@@ -495,17 +527,17 @@ class Apolo_Component_FormulatorTest
     public function gerenateMockTemplateAndTenderTypes()
     {
         return array(
-            array($this->newMockTemplate(), null, array(
+            array($this->newMockTemplate(), null, implode(' ', array(
                 'mediaJS' => 'file.js',
                 'mediaCss' => 'file.css',
                 'openForm' => '<form>', 
-                'closeForm' => '</form>',
                 'elements' => '<input />',
-            )),
+                'closeForm' => '</form>',
+            ))),
             array($this->newMockTemplate(), 'openForm', '<form>'),
             array($this->newMockTemplate(), 'closeForm', '</form>'),
-            array($this->newMockTemplate(), 'mediaJs', 'file.js'),
-            array($this->newMockTemplate(), 'mediaCss', 'file.css'),
+            array($this->newMockTemplate(), 'mediaJS', 'file.js'),
+            array($this->newMockTemplate(), 'mediaCSS', 'file.css'),
             array($this->newMockTemplate(), 'elements', '<input />'),
         );
     }
@@ -517,7 +549,9 @@ class Apolo_Component_FormulatorTest
     {
         $this->object->render();
         $class = get_class($this->object->getTemplate());
-        $this->assertEquals('Apolo_Component_Formulator_Template_Default', $class);
+        $this->assertEquals(
+            'Apolo_Component_Formulator_Template_Default', $class
+        );
     }
 
     /**
@@ -527,7 +561,9 @@ class Apolo_Component_FormulatorTest
     {
         $this->object->setTemplate('debug');
         $class = get_class($this->object->getTemplate());
-        $this->assertEquals('Apolo_Component_Formulator_Template_Debug', $class);
+        $this->assertEquals(
+            'Apolo_Component_Formulator_Template_Debug', $class
+        );
     }
 
     /**
@@ -538,7 +574,9 @@ class Apolo_Component_FormulatorTest
     {
     	$this->object->setTemplate($this->newMockTemplate());
     	$output = (string) $this->object;
-        $this->assertEquals('file.js file.css <form> <input /> </form>', $output);
+        $this->assertEquals(
+            'file.js file.css <form> <input /> </form>', $output
+        );
     }
 
     /**
@@ -598,9 +636,8 @@ class Apolo_Component_FormulatorTest
     }
 
     /**
-     * @covers                   Apolo_Component_Formulator::setTemplate
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage File not found
+     * @covers            Apolo_Component_Formulator::setTemplate
+     * @expectedException PHPUnit_Framework_Error_Warning
      */
     public function testSetTemplate2()
     {

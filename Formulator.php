@@ -26,34 +26,40 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template.php';
  *
  * This Class has informations about form and his sub elements
  *
- * @category   Component
- * @package    Formulator
- * @subpackage Core
- * @author     Michael Granados <michaelgranados@corp.virgula.com.br>
- * @author     Michell Campos <michell@corp.virgula.com.br>
- * @copyright  2011-2012 Virgula S/A
- * @license    Virgula Copyright
- * @link       http://virgula.uol.com.br
+ * @category  Component
+ * @package   Formulator\Core
+ * @author    Michael Granados <michaelgranados@corp.virgula.com.br>
+ * @author    Michell Campos <michell@corp.virgula.com.br>
+ * @copyright 2011-2012 Virgula S/A
+ * @license   Virgula Copyright
+ * @link      http://virgula.uol.com.br
  */
 class Apolo_Component_Formulator
 {
-    /**#@+
-     * @access private
-     * @var array
-     */
+    const CLASS_PATTERN = '@^[a-z][a-z0-9_]*[a-z0-9]+$@i';
+    const DS = DIRECTORY_SEPARATOR;
 
     /**
      * This is the form configuration
+     *
+     * @access private
+     * @var array
      */
     private $_config   = array();
 
     /**
      * This is the form set of elements
+     *
+     * @access private
+     * @var array
      */
     private $_elements = array();
 
     /**
      * This is the form set of values
+     *
+     * @access private
+     * @var array
      */
     private $_values   = array();
 
@@ -61,12 +67,14 @@ class Apolo_Component_Formulator
      * This is the media used by the form
      *
      * It contains the CSS and JS elements
+     *
+     * @access private
+     * @var array
      */
     private $_media = array(
         'css' => array(),
         'js'  => array(),
     );
-    /**#@-*/
 
     /**
      * This is the template object
@@ -77,24 +85,14 @@ class Apolo_Component_Formulator
     private $_template = null;
 
     /**
-     * This is the recursive form element
-     *
-     * @ignore
-     * @access private
-     * @var object
-     */
-    private $_form = null;
-
-    /**
      * Construct the Formulator object
      *
      * You can pass an array with configurations and sub elements of form
-     * <code>
-     * $form = new Apolo_Component_Formulator(array(
-     *     'method' => 'post',
-     *     'target' => '_blank',
-     * ));
-     * </code>
+     *
+     *     $form = new Apolo_Component_Formulator(array(
+     *         'method' => 'post',
+     *         'target' => '_blank',
+     *     ));
      *
      * @param array $args optional configs
      *
@@ -105,13 +103,11 @@ class Apolo_Component_Formulator
      */
     public function __construct($args = array())
     {
-        $this->_form = $this;
-        $args = func_get_args();
+        $args              = func_get_args();
         $is_config_present = (isset($args[0]) && !isset($args[0][0]));
-        $config_is_null = (array_key_exists(0, $args) && null == $args[0]);
+        $config_is_null    = (array_key_exists(0, $args) && null == $args[0]);
         if ($is_config_present || $config_is_null) {
-            $config = array_shift($args);
-            if ($config) {
+            if ($config = array_shift($args)) {
                 $this->config($config);
             }
         }
@@ -126,48 +122,42 @@ class Apolo_Component_Formulator
      *
      * The bellow code converts the form method to POST.
      *
-     * <code>
-     * $form = new Apolo_Component_Formulator;
-     * $form->config(array(
-     *     'method' => 'post',
-     * ));
-     * </code>
+     *     $form = new Apolo_Component_Formulator;
+     *     $form->config(array(
+     *         'method' => 'post',
+     *     ));
      *
      * Passing the values in this array you can set the values of form.
      *
      * The bellow code set the elements <sapm>name</samp> and <samp>age</samp>
      * on form.
      *
-     * <code>
-     * $form = new Apolo_Component_Formulator;
-     * $form->config(array(
-     *     'values' => array(
-     *         'name' => 'michell',
-     *         'age'  => '31',
-     *     ),
-     * ));
-     * </code>
+     *     $form = new Apolo_Component_Formulator;
+     *     $form->config(array(
+     *         'values' => array(
+     *             'name' => 'michell',
+     *             'age'  => '31',
+     *         ),
+     *     ));
      *
      * Passing an array to configure the elements of form.
      *
      * The bellow code add 2 elements on form: <samp>name</samp> and
      * <samp>age</samp>.
      *
-     * <code>
-     * $form = new Apolo_Component_Formulator;
-     * $form->config(array(
-     *     'elements' => array(
-     *         array(
-     *             'type' => 'text',
-     *             'name' => 'name',
+     *     $form = new Apolo_Component_Formulator;
+     *     $form->config(array(
+     *         'elements' => array(
+     *             array(
+     *                 'type' => 'text',
+     *                 'name' => 'name',
+     *             ),
+     *             array(
+     *                 'type' => 'number',
+     *                 'name' => 'age',
+     *             ),
      *         ),
-     *         array(
-     *             'type' => 'number',
-     *             'name' => 'age',
-     *         ),
-     *     ),
-     * ));
-     * </code>
+     *     ));
      *
      * @param array $config config of form, values or/and elements
      *
@@ -179,47 +169,13 @@ class Apolo_Component_Formulator
     {
         if (isset($config['values'])) {
             $this->_values = $config['values'];
-            unset($config['values']);
         }
         if (isset($config['elements'])) {
             $this->addElements($config['elements']);
-            unset($config['elements']);
         }
+        unset($config['elements'], $config['values']);
         $this->_config = $config + $this->_config;
         return $this;
-    }
-
-
-    /**
-     * This method reset the form with your config and elements
-     *
-     * {@internal
-     * when we create these subelements need to have the form page
-     * information. Internally subelements have an object
-     * form for each element. This element has all the
-     * element settings page. To retrieve this information,
-     * this method is used internally.
-     * }
-     *
-     * @param Apolo_Component_Formulator $form The object to be resetted
-     *
-     * @ignore
-     *
-     * @return void
-     */
-    public function setForm($form)
-    {
-        $this->_form = $form;
-    }
-
-    /**
-     * Just to read the form attributes
-     *
-     * @return array
-     */
-    public function getForm()
-    {
-        return $this->_form;
     }
 
     /**
@@ -227,11 +183,10 @@ class Apolo_Component_Formulator
      *
      * With the bellow example you can get the form method.
      *
-     * <code>
-     * // $form is an Apolo_Component_Formulator Object setted on another file.
-     * $config = $form->getConfig();
-     * echo $config['method'];
-     * </code>
+     *     // $form is an Apolo_Component_Formulator Object setted
+     *     // on another file.
+     *     $config = $form->getConfig();
+     *     echo $config['method'];
      *
      * @return array
      */
@@ -251,14 +206,14 @@ class Apolo_Component_Formulator
      *
      * @uses Apolo_Component_Formulator::addElement()
      *
-     * @return Apolo_Component_Formulator
+     * @return void
      */
     public function addElements(array $elements)
     {
+        /** @var array $element */
         foreach ($elements as $element) {
             $this->addElement($element);
         }
-        return $this;
     }
 
     /**
@@ -266,19 +221,40 @@ class Apolo_Component_Formulator
      *
      * This need to have a type and the type must be a string containing only
      * alpha lowecase characters. All elements types are listed in Element
-     * directory. See some samples on
-     * {@link Apolo_Component_Formulator::config()}
+     * directory. See some samples on config method.
      *
      * @param array $element array of config of element
      *
+     * @see Apolo_Component_Formulator::config()
+     * @uses Apolo_Component_Formulator::element()
      * @return Apolo_Component_Formulator
      */
     public function addElement(array $element)
     {
-        $this->_elements[] = Apolo_Component_Formulator::element($element);
-        return $this;
+        $this->_elements[] = self::element($element);
     }
 
+    /**
+     * This method generates a Element Object
+     *
+     * Use this static method to generate new elements and use in addElement
+     * method and inside each element when it creates subelements.
+     *
+     * @param array $element Element configurations
+     *
+     * @throws InvalidArgumentException When <code>$element['type']</code> is
+     *  not set
+     * @throws InvalidArgumentException When $element['type'] is not
+     *  alpha-dash-numeric or starts with a dash or number
+     * @throws DomainException When element class file not found
+     * @throws DomainException When element class not defined
+     *
+     * @see Apolo_Component_Formulator_Element
+     * @see Apolo_Component_Formulator::addElement()
+     *
+     * @static
+     * @return Apolo_Component_Formulator_Element
+     */
     static public function element(array $element)
     {
         if (empty($element['type'])) {
@@ -287,64 +263,80 @@ class Apolo_Component_Formulator
             );
         }
         if (   !is_string($element['type'])
-            || !preg_match('@^[a-z][a-z_]+$@i', $element['type'])
+            || !preg_match(self::CLASS_PATTERN, $element['type'])
         ) {
             throw new InvalidArgumentException('Invalid element "type"');
         }
-        $file = preg_replace('@_+@', '_', trim($element['type'], '_'));
-        $file = preg_replace(
-            '@_(\w)@e', 'DIRECTORY_SEPARATOR . strtoupper("\\1")', $file
-        );
-        $file = preg_replace(
-            '@([A-Z])@e', 'DIRECTORY_SEPARATOR . strtoupper("\\1")', $file
-        );
-        $file = 'Element' . DIRECTORY_SEPARATOR . ucfirst($file) . '.php';
-        $file = preg_replace(
-            '@\\' . DIRECTORY_SEPARATOR . '+@', DIRECTORY_SEPARATOR, $file
-        );
-        if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . $file)) {
-            throw new DomainException('Element file not found: ' . $file);
+        list($file, $class) = self::retriveFileClass4Element($element['type']);
+        include_once $file;
+        if (!class_exists($class)) {
+            throw new DomainException('Class not defined: ' . $class);
         }
-        include_once __DIR__ . DIRECTORY_SEPARATOR . $file;
-        $className = preg_replace(
-            '@([A-Z])@e', 'strtoupper("_\\1")', ucfirst($element['type'])
-        );
-        $className = preg_replace(
-            '@[_]([a-z])@ie', 'strtoupper("_\\1")', $className
-        );
-        $className = 'Apolo_Component_Formulator_Element_' . $className;
-        $className = preg_replace('@_+@', '_', trim($className, '_'));
-        if (!class_exists($className)) {
-            throw new DomainException('Class not defined: ' . $className);
-        }
-        $reflectionClass = new ReflectionClass($className);
+        $reflectionClass = new ReflectionClass($class);
         return $reflectionClass->newInstance($element);
     }
 
+    /**
+     * Retrives a File and Class Name for a Element
+     *
+     * @param string $type Type of element
+     *
+     * @internal
+     * @return array
+     */
+    static public function retriveFileClass4Element($type)
+    {
+        $replacements = array(
+            array('@_+@', '_'),
+            array('@_+(\w)@e', 'self::DS . strtoupper("\\1")'),
+            array('@([A-Z])@e', 'self::DS . strtoupper("\\1")'),
+        );
+        $_patterns = array_map('reset', $replacements);
+        $_replaces = array_map('end', $replacements);
+        $file = preg_replace($_patterns, $_replaces, ucfirst($type));
+        $file = 'Element' . self::DS . ucfirst($file) . '.php';
+        $file = preg_replace('@\\' . self::DS . '+@', self::DS, $file);
+        $className = 'Apolo_Component_Formulator_'
+                   . str_replace(self::DS, '_', substr($file, 0, -4));
+        $file = __DIR__ . self::DS . $file;
+        return array($file, $className);
+    }
+
+    /**
+     * Sets the template engine
+     *
+     * Use this method to say what template will render the form. You can pass
+     * a string with filename (without extension) over /Template path.
+     *
+     * @param string|object $template Name or object template
+     *
+     * @throws InvalidArgumentException When template is not alpha-numeric or it
+     *  length is minor than 1
+     * @return void
+     */
     public function setTemplate($template)
     {
         if (is_object($template)) {
-            $this->_template = $template;
-            return;
+            return $this->_template = $template;
         }
-        if (!preg_match('@^[a-z][a-z0-9]*$@i', $template)) {
+        if (!preg_match(self::CLASS_PATTERN, (string) $template)) {
             throw new InvalidArgumentException('Invalid template name');
         }
         $template = ucfirst(strtolower($template));
         $file     = __DIR__ . '/Template/' . $template . '.php';
         $object   = 'Apolo_Component_Formulator_Template_' . $template;
         if (!class_exists($object)) {
-            if (!realpath($file)) {
-                throw new InvalidArgumentException(
-                    'Invalid template name. File not found: ' . $file
-                );
-            }
             include $file;
         }
         $reflectionClass = new ReflectionClass($object);
         $this->_template = $reflectionClass->newInstance();
     }
 
+    /**
+     * Get template object
+     *
+     * @return void
+     */
     public function getTemplate()
     {
         return $this->_template;
@@ -370,24 +362,19 @@ class Apolo_Component_Formulator
     public function render($area = null)
     {
         if ($this->_template == null) {
-            include_once __DIR__ . DIRECTORY_SEPARATOR . 'Template/Default.php';
-            $this->_template = new Apolo_Component_Formulator_Template_Default;
+            $this->setTemplate('default');
         }
         $this->_template->setForm($this);
         $form = array(
             'mediaJS'   => implode('', $this->_template->renderMedia('js')),
             'mediaCSS'  => implode('', $this->_template->renderMedia('css')),
             'openForm'  => $this->_template->renderOpenForm(),
-            'closeForm' => $this->_template->renderCloseForm(),
             'elements'  => $this->_template->render(),
+            'closeForm' => $this->_template->renderCloseForm(),
         );
         if (array_key_exists($area, $form)) {
             return $form[$area];
         }
-        // alternating order for return correct string
-        $closeForm = $form['closeForm'];
-        unset($form['closeForm']);
-        $form['closeForm'] = $closeForm;
         return join(' ', $form);
     }
 
@@ -404,8 +391,9 @@ class Apolo_Component_Formulator
     /**
      * This is a magic method to print the object.
      *
-     * When you print the object it runs
-     * {@link Apolo_Component_Formulator::render() render method}
+     * When you print the object it runs render method
+     *
+     * @see Apolo_Component_Formulator::render()
      *
      * @return string
      */
@@ -421,19 +409,16 @@ class Apolo_Component_Formulator
      *
      * @param string $media the file name
      *
-     * @return void
+     * @return bool
      */
     public function addMedia($media)
     {
-        if (preg_match('@\.js$@i', $media)) {
-            if (!in_array($media, $this->_media['js'])) {
-                $this->_media['js'][] = $media;
-            }
+        if (!preg_match('@\.(js|css)$@i', $media, $match)) {
+            return false;
         }
-        if (preg_match('@\.css$@i', $media)) {
-            if (!in_array($media, $this->_media['css'])) {
-                $this->_media['css'][] = $media;
-            }
+        $local = $match[1];
+        if (!in_array($media, $this->_media[$local])) {
+            $this->_media[$local][] = $media;
         }
     }
 
@@ -456,5 +441,4 @@ class Apolo_Component_Formulator
     {
         return $this->_values;
     }
-
 }

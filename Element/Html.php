@@ -37,8 +37,8 @@ class Apolo_Component_Formulator_Element_Html
      * 
      * @return void
      */
-    public function setElement()
+    public function setElement(array $element)
     {
-        $this->attrs['content'] = $this->element['content'];
+        $this->attrs['content'] = $element['content'];
     }
 }

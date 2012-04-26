@@ -22,7 +22,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'ElementInterface.php';
 
 /**
  * Formulator Component Formulator Element
- * 
+ *
  * This abstract Class has methods to make and get attributes and get values
  * of the form elements.
  *
@@ -34,115 +34,307 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'ElementInterface.php';
  * @copyright  2011-2012 Virgula S/A
  * @license    Virgula Copyright
  * @link       http://virgula.uol.com.br
+ * @abstract
  */
 abstract class Apolo_Component_Formulator_Element
+    implements Apolo_Component_Formulator_ElementInterface
 {
-    public $attrs = array();
-    protected $element = array();
-    protected $values = array(); 
+    /**
+     * Informs if this objects accepts subelements
+     *
+     * @var bool
+     */
+    protected $acceptSubElements = true;
 
-    // public function __construct($element, array $values, $form)
-    public function __construct($element)
+    /**
+     * Template type
+     *
+     * The template uses this key know what kind of element it needs to render
+     *
+     * @var string
+     */
+    public  $templateType       = 'default';
+
+    /**
+     * Set of valid attributes
+     *
+     * Must have a context and valid attributes
+     *
+     * <pre>
+     * array(
+     *   'label' => array('for', 'class', 'id'),
+     * );
+     * </pre>
+     *
+     * @var array
+     */
+    public  $validAttributes    = array(
+        // 'context' => array('attributes')
+    );
+
+    /**
+     * Attributes generated
+     *
+     * When script sets the element, it set some attributes to render in
+     * future. This are the generated attributes.
+     *
+     * <pre>
+     * array(
+     *   'label' => array('for', 'class', 'id'),
+     *   'input' => array('type', 'name', 'value'),
+     * );
+     * </pre>
+     *
+     * @var array
+     */
+    public  $attritubes         = array();
+
+    /**
+     * Value for this element
+     *
+     * @var string
+     * @protected
+     */
+    protected $value = '';
+
+    /**
+     * Range of subelements
+     *
+     * This are an array containing various
+     * {@link Apolo_Component_Formulator_Element elements}
+     *
+     * @var array
+     */
+    public  $subElements        = array();
+
+    /**
+     * This method is caller internally by the Formulator::element
+     *
+     * @param array $element The element configuration
+     *
+     * @internal
+     * @final
+     */
+    final function __construct(array $element)
     {
-    	return;
-        $this->form    =& $form;
-        $this->element =  $element;
-
-        if ($values) {
-            $this->values = $values;
-        }
-        $this->attrs['type'] = $element['type'];
-        if (isset($element['label'])) {
-            $this->attrs['label'] = $element['label'];
-        }
         $this->setElement($element);
-        if (isset($this->element['elements'])) {
-            $config = array(
-                'elements' => $this->element['elements'],
-                'values'   => !empty($this->element['values']) ? $this->element['values'] : $values,
-                'form'     => &$form,
+        if ($this->acceptSubElements && !empty($element['subElements'])) {
+            $this->setSubElements($element['subElements']);
+        }
+        if (isset($element['value'])) {
+            $this->value = (string) $element['value'];
+        }
+    }
+
+    /**
+     * Verifies if an attritube is valid
+     *
+     * This method verifies over configuration if this attribute is valid for
+     * determinated context.
+     *
+     * **Note:** All elements accepts <code>data-*</code> attribute
+     *
+     * @param string $context   Context where the attribute can be
+     * @param string $attribute Name of attribue
+     *
+     * @throws DomainException when passed not scalar parameters
+     * @uses Apolo_Component_Formulator_Element::$validAttributes
+     * @return bool
+     */
+    public function validAttribute($context = 'default', $attribute = '')
+    {
+        foreach (array('context', 'attribute') as $item) {
+        	if (!is_scalar($$item)) {
+            	throw new InvalidArgumentException(
+            	    'Invalid argument for ' . $item
+            	);
+            }
+            $$item = (string) $$item;
+        }
+        if (   isset($this->validAttributes[$context])
+        	&& 'data-' === substr($attribute, 0, 5)
+        ) {
+            return true;
+        }
+        return isset($this->validAttributes[$context])
+            && in_array($attribute, $this->validAttributes[$context]);
+    }
+
+    /**
+     * Sets the attribute to future response
+     *
+     * This method tries to set an attribute validatting the attribute before it
+     *
+     * @param string $context   Context where the attribube will be setted
+     * @param string $attribute Name of attribute
+     * @param string $value     Value of attribute
+     *
+     * @return void
+     */
+    public function setAttribute(
+        $context = 'default', $attribute = '', $value = ''
+    ) {
+        foreach (array('context', 'attribute', 'value') as $item) {
+        	if (!is_scalar($$item)) {
+            	throw new InvalidArgumentException(
+            	    'Invalid argument for ' . $item
+            	);
+            }
+            $$item = (string) $$item;
+        }
+        if (!$this->validAttribute($context, $attribute)) {
+            throw new InvalidArgumentException(
+                'Invalid attribute for: ' . $context . '/' . $attribute
             );
-            $reflectionClass = new ReflectionClass(get_class($form));
-            $this->elements = $reflectionClass->newInstanceArgs();
-            $this->elements->setForm($form);
-            $this->elements->config($config);
         }
+        if (!isset($this->attributes[$context])) {
+            $this->attributes[$context] = array();
+        }
+        $this->attributes[$context][$attribute] = $value;
     }
 
-    public function makeAttributes()
+    /**
+     * Retrive all attributes in HTML
+     *
+     * @param string $context Context of attribute, can be label/input/etc
+     *
+     * @return string
+     */
+    public function attributes($context = 'default')
     {
+        if (!is_scalar($context)) {
+        	throw new InvalidArgumentException('Invalid argument type');
+        }
+        $context = (string) $context;
+        if (empty($this->attributes[$context])) {
+            return '';
+        }
         $attributes = array();
-        foreach($this->element as $key => $value) {
-            if (
-                in_array($key, array('elements', 'label', 'value', 'type', 'validation'))
-            || !is_scalar($value)
-            ) {
-                continue;
-            }            
-            $attributes[] = $key . '="'.htmlentities($value, ENT_QUOTES).'"';
-        }        
-        if ($attributes) {
-            return ' ' . implode(' ', $attributes);
-        }        
+        foreach (array_keys($this->attributes[$context]) as $item) {
+            $attributes[] = $this->attribute($context, $item);
+        }
+        return implode('', $attributes);
     }
 
-    private function _getAttribute($attributeName = 'value', $attribute = true, $escaped = true)
-    {
-        $value = '';
-        if ('value' == $attributeName && isset($this->values[$this->element['name']])) {
-            $value = $this->values[$this->element['name']];                            
-        } else {
-            if (!empty($this->element[$attributeName])) {
-                $value = $this->element[$attributeName];
+    /**
+     * Gets an attribute
+     *
+     * This method retrives an attribute over the content element
+     *
+     * @param string $context       Context where the attribute will be getted
+     * @param string $attribute     Name of attribute
+     * @param bool   $showAttribute Shows the attribute name
+     * @param bool   $escaped       Returns the value escaped (htmlentities)
+     *
+     * @throws InvalidArgumentException when $context or $attribute are not 
+     *  scalar values
+     * @throws InvalidArgumentException when $showAttribute or $escaped are not
+     *  boolean values
+     * @return string
+     */
+    public function attribute(
+        $context = '', $attribute = 'value', $showAttribute = true,
+        $escaped = true
+    ) {
+        foreach (array('context', 'attribute') as $item) {
+        	if (!is_scalar($$item)) {
+            	throw new InvalidArgumentException(
+            	    'Invalid argument for ' . $item
+            	);
             }
-        }        
-
-        /**
-         * Get value post if isset session         
-         */
-        if (isset($_SESSION['temp_post']) && $attributeName == 'value') {
-            foreach ($_SESSION['temp_post'] as $k => $v) {
-                $bf = array('[', ']');
-                $af = array('.', '');
-                $ne = str_replace($bf, $af, $this->element['name']);
-                if ($ne == $k) {
-                    $value = utf8_decode($v);
-                }
-            }
+            $$item = (string) $$item;
         }
-
+        foreach (array('showAttribute', 'escaped') as $item) {
+        	if (!is_bool($$item)) {
+            	throw new InvalidArgumentException(
+            	    'Invalid argument for ' . $item
+            	);
+            }
+            $$item = (bool) $$item;
+        }
+        if (!isset($this->attributes[$context])) {
+            return '';
+        }
+        $value = empty($this->attributes[$context][$attribute])
+               ? '' : $this->attributes[$context][$attribute];
         if ($value) {
             if ($escaped) {
                 $value = htmlentities($value, ENT_QUOTES);
             }
-            if ($attribute) {            
-                $value = ' ' . $attributeName . '="'.$value.'"';
+            if ($showAttribute) {
+                $value = ' ' . $attribute . '="'.$value.'"';
             }
         }
-        
         return $value;
     }
 
-    public function getValue($attribute = true, $escaped = true)
+    /**
+     * Port to accept subelements
+     *
+     * @param boolean $accept Accepts or not accepts
+     *
+     * @internal
+     * @throws DomainException when passed no boolean argument
+     * @return void
+     */
+    final public function setAcceptSubElements($accept)
     {
-        return $this->_getAttribute('value', $attribute, $escaped);
-    }
-
-    public function getClass($attribute = true, $escaped = true)
-    {
-        return $this->_getAttribute('class', $attribute, $escaped);
-    }
-
-    public function __call($method, $args)
-    {
-        if ('get' === substr($method, 0, 3)) {
-            $attribute = strtolower(substr($method, 3));
-            if ('elements' !== $attribute && isset($this->attrs[$attribute])) {
-                return (string) $this->attrs[$attribute];
-            } else {
-                trigger_error('Invalid attribute: ' . $attribute);
-            }
+        if (!is_bool($accept)) {
+            throw new InvalidArgumentException(
+                'Parameter invalid. Must be a boolean'
+            );
         }
-        trigger_error('Method invalid: ' . $method, E_USER_ERROR);
+        $this->acceptSubElements = (bool) $accept;
+    }
+
+    /**
+     * Sets the subelements, if is validAttribute
+     *
+     * @param array $subElements The subelements
+     *
+     * @return void
+     */
+    public function setSubElements(array $subElements)
+    {
+        $this->subElements = array();
+        foreach ($subElements as $element) {
+            $element = Apolo_Component_Formulator::element($element);
+            $this->subElements[] = $element;
+        }
+    }
+
+    /**
+     * Sets the value of element
+     *
+     * @param string $value The value
+     *
+     * @return void
+     */
+    public function setValue($value = '')
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * Retrives the value
+     *
+     * @param bool $escaped Escapes the value
+     *
+     * @return string
+     */
+    public function getValue($escaped = true)
+    {
+    	$value = (string) $this->value;
+    	if (!is_bool($escaped)) {
+        	throw new InvalidArgumentException(
+        	    'Invalid argument, must be boolean type'
+        	);
+        }
+    	if ($escaped) {
+        	$value = htmlentities($value, ENT_QUOTES);
+        }
+        return $value;
     }
 }
+
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

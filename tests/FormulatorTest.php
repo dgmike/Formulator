@@ -27,9 +27,9 @@ class Apolo_Component_FormulatorTest
      */
     protected function tearDown()
     {
-        @unlink(dirname(__DIR__) . '/Element/Invalidclass.php');
-        @unlink(dirname(__DIR__) . '/Element/Invalid/Class.php');
-        @rmdir(dirname(__DIR__) . '/Element/Invalid');
+        @unlink(dirname(__DIR__) . '/src/Element/Invalidclass.php');
+        @unlink(dirname(__DIR__) . '/src/Element/Invalid/Class.php');
+        @rmdir(dirname(__DIR__) . '/src/Element/Invalid');
     }
 
     /**
@@ -445,10 +445,10 @@ class Apolo_Component_FormulatorTest
     public function testAddElement5($type, $className)
     {
         if (!file_exists(dirname(__DIR__) . '/Element/Invalid')) {
-            mkdir(dirname(__DIR__) . '/Element/Invalid');
+            mkdir(dirname(__DIR__) . '/src/Element/Invalid');
         }
-        file_put_contents(dirname(__DIR__) . '/Element/Invalidclass.php', '');
-        file_put_contents(dirname(__DIR__) . '/Element/Invalid/Class.php', '');
+        file_put_contents(dirname(__DIR__) . '/src/Element/Invalidclass.php', '');
+        file_put_contents(dirname(__DIR__) . '/src/Element/Invalid/Class.php', '');
 
         $this->setExpectedException(
             'DomainException', 

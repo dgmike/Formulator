@@ -20,7 +20,7 @@ class Apolo_Component_Formulator_Element_PhoneGroup
     extends Apolo_Component_Formulator_Element_Repetition
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public function setElement()
+    public function setElement(array $element)
     {
         $this->element['elements'] = array(array());
         parent::setElement();

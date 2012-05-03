@@ -38,7 +38,7 @@ class Apolo_Component_Formulator_Element_Address
      * 
      * @return void
      */
-    public function setElement()
+    public function setElement(array $element)
     {
         $this->attrs['fieldsetopen']  = '<fieldset'.$this->makeAttributes().'>';
         $this->attrs['fieldsetclose'] = '</fieldset>';

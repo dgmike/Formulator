@@ -35,7 +35,10 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template.php';
  * @link      http://virgula.uol.com.br
  */
 class Apolo_Component_Formulator
+    implements RecursiveIterator
 {
+	private $_position = 0;
+
     const CLASS_PATTERN = '@^[a-z][a-z0-9_]*[a-z0-9]+$@i';
     const DS = DIRECTORY_SEPARATOR;
 
@@ -229,8 +232,12 @@ class Apolo_Component_Formulator
      * @uses Apolo_Component_Formulator::element()
      * @return Apolo_Component_Formulator
      */
-    public function addElement(array $element)
+    public function addElement($element)
     {
+    	if ($element instanceof Apolo_Component_Formulator_Element) {
+        	$this->_elements[] = $element;
+        	return;
+        }
         $this->_elements[] = self::element($element);
     }
 
@@ -440,5 +447,48 @@ class Apolo_Component_Formulator
     public function getValues()
     {
         return $this->_values;
+    }
+
+    /** Iterator Methods 
+     *
+     * @TODO document and coverage all above methods
+     */
+
+    public function valid()
+    {
+        return isset($this->_elements[$this->_position]);
+    }
+
+    public function hasChildren()
+    {
+        return (bool) $this->_elements[$this->_position]->subElements;
+    }
+
+    public function next()
+    {
+        $this->_position++;
+    }
+
+    public function current()
+    {
+        return $this->_elements[$this->_position];
+    }
+
+    public function getChildren()
+    {
+    	$elements = array(
+            'elements' => $this->_elements[$this->_position]->subElements,
+        );
+        return new Apolo_Component_Formulator($elements);
+    }
+
+    public function rewind()
+    {
+        $this->_position = 0;
+    }
+
+    public function key()
+    {
+        return $this->_position;
     }
 }

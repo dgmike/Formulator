@@ -18,7 +18,7 @@ class Apolo_Component_Formulator_Element_Select
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public function setElement()
+    public function setElement(array $element)
     {
         $options = array();
         foreach ($this->element['values'] as $key => $value) {

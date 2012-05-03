@@ -38,7 +38,7 @@ class Apolo_Component_Formulator_Element_Text
      * 
      * @return void
      */
-    public function setElement()
+    public function setElement(array $element)
     {
         $input = '<input type="text"'
                . $this->makeAttributes()

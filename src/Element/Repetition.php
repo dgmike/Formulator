@@ -18,7 +18,7 @@ class Apolo_Component_Formulator_Element_Repetition
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public function setElement()
+    public function setElement(array $element)
     {
         if (empty($this->element['name'])) {
             trigger_error('Name is mandatory in repetition element type.');

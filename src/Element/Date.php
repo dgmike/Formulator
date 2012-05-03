@@ -18,7 +18,7 @@ class Apolo_Component_Formulator_Element_Date
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public function setElement()
+    public function setElement(array $element)
     {
         #$this->form->addMedia('jquery-ui.js' . PHP_EOL);
         #$this->form->addMedia('smoothness/jquery-ui-1.8.16.custom.css');

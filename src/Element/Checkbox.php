@@ -38,7 +38,7 @@ class Apolo_Component_Formulator_Element_Checkbox
      * 
      * @return void
      */
-    public function setElement()
+    public function setElement(array $element)
     {
         $this->attrs['input'] = '<input type="checkbox"' 
                               . $this->makeAttributes() 

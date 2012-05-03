@@ -108,6 +108,13 @@ abstract class Apolo_Component_Formulator_Element
     public  $subElements        = array();
 
     /**
+     * Parent element
+     *
+     * @var Apolo_Component_Formulator_Element
+     */
+    protected $parent = null;
+
+    /**
      * This method is caller internally by the Formulator::element
      *
      * @param array $element The element configuration
@@ -269,25 +276,6 @@ abstract class Apolo_Component_Formulator_Element
     }
 
     /**
-     * Port to accept subelements
-     *
-     * @param boolean $accept Accepts or not accepts
-     *
-     * @internal
-     * @throws DomainException when passed no boolean argument
-     * @return void
-     */
-    final public function setAcceptSubElements($accept)
-    {
-        if (!is_bool($accept)) {
-            throw new InvalidArgumentException(
-                'Parameter invalid. Must be a boolean'
-            );
-        }
-        $this->acceptSubElements = (bool) $accept;
-    }
-
-    /**
      * Sets the subelements, if is validAttribute
      *
      * @param array $subElements The subelements
@@ -335,6 +323,18 @@ abstract class Apolo_Component_Formulator_Element
         }
         return $value;
     }
-}
 
+    public function acceptSubElements()
+    {
+        return $this->acceptSubElements;
+    }
+
+    /**
+     * @TODO document, test and cover
+     */
+    public function setParent(Apolo_Component_Formulator_Element $parent)
+    {
+        $this->parent = $parent;
+    }
+}
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

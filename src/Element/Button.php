@@ -38,7 +38,7 @@ class Apolo_Component_Formulator_Element_Button
      * 
      * @return void
      */
-    public function setElement()
+    public function setElement(array $element)
     {
         $especialAttributes = array(
             'text'       => 'ok',

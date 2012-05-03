@@ -93,7 +93,7 @@ interface Apolo_Component_Formulator_ElementInterface
      *
      * @param boolean $accept Accepts or not accepts
      * @return void
-     */
+     * /
     public function setAcceptSubElements($accept);
 
     /**

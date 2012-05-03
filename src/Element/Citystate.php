@@ -44,7 +44,7 @@ class Apolo_Component_Formulator_Element_Citystate
      * 
      * @return void
      */
-    public function setElement()
+    public function setElement(array $element)
     {
         $this->form->addMedia('citystate.js');
 

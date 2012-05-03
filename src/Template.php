@@ -14,9 +14,11 @@
  * @link       http://virgula.uol.com.br
  */
 
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Renderer.php';
+
 /**
  * Formulator Template
- * 
+ *
  * This abstract class render your form using a basic template of any kind
  * of element used by Formulator Component.
  *
@@ -31,12 +33,17 @@
  */
 abstract class Apolo_Component_Formulator_Template
 {
-    private $_form = null;
+    const CALL_PATTERN     = '@^\{call\:([a-z0-9_]+)\}@si';
+    const FILTER_PATTERN   = '@^\{filter\:([a-z0-9_]+)\}@sie';
+    const IS_TOKEN_PATTERN = '@^\{([a-z0-9]\.?[a-z0-9_-]*)\}$@i';
 
-    /**
-     * @var int $counter counter used in some templates
-     */
-    public $counter   = 0;
+    const TOKEN_PATTERN  = '@(
+            \{filter\:  [a-z0-9_]+\}   |   # filters
+            \{call\:    [a-z0-9_]+\}   |   # call methods
+            \{[a-z0-9]\.?[a-z0-9_-]*\}     # other tag, default way
+        )@isx';
+    
+    protected $form = null;
 
     /**
      * List of templates
@@ -47,11 +54,7 @@ abstract class Apolo_Component_Formulator_Template
      * @var array $templates
      */
     public $templates = array(
-        'hidden'   => '{input}',
-        'fieldset' => '
-            {fieldsetopen}<legend>{legend}</legend>{elements}{fieldsetclose}
-        ',
-        'default'  => '{label}: {input}',
+        'html' => "<li>{content} - {subElements}{call:uniqid} {filter:test}</li>\n"
     );
 
     /**
@@ -59,9 +62,16 @@ abstract class Apolo_Component_Formulator_Template
      */
     public $media = array();
 
+    /**
+     * Set the form component, used to retrive some data in render
+     *
+     * @param Apolo_Component_Formulator $form The form
+     *
+     * @return void
+     */
     public function setForm(Apolo_Component_Formulator $form)
     {
-        $this->_form = $form;
+        $this->form = $form;
     }
 
     /**
@@ -69,13 +79,12 @@ abstract class Apolo_Component_Formulator_Template
      *
      * You need to pass the formulator object to render
      *
-     * @param Apolo_Component_Formulator $form the form to use
-     *
      * @return string
      */
     public function renderOpenForm()
     {
-        return '<form'.$this->makeAttributes($this->_form->getConfig()).'>' . PHP_EOL;
+        $attrs = $this->makeAttributes($this->form->getConfig());
+        return "<form{$attrs}>" . PHP_EOL;
     }
 
     /**
@@ -92,7 +101,7 @@ abstract class Apolo_Component_Formulator_Template
      *     'style' => 'background: url("image.png")',
      * );
      * print $fTemplate->makeAttributes($config);
-     * // clas="simple space" name="person" 
+     * // clas="simple space" name="person"
      * // style="background: url(&quot;image.png&quot;)"
      * </pre>
      *
@@ -117,8 +126,6 @@ abstract class Apolo_Component_Formulator_Template
     /**
      * Renders the close form
      *
-     * @param Apolo_Component_Formulator $form Form configuration
-     *
      * @return string
      */
     public function renderCloseForm()
@@ -128,25 +135,18 @@ abstract class Apolo_Component_Formulator_Template
 
     /**
      * Renderizes the media objects to use in head tags
-     * 
-     * @param Apolo_Component_Formulator $form Form configuration
-     * @param string                     $area Area to render: js/css
+     *
+     * @param string $area Area to render: js/css
      *
      * @return string
      */
     public function renderMedia($area)
     {
         if (!$this->media) {
-            $media  = $this->_form->getMedia();
+            $media  = $this->form->getMedia();
             $_media = array('css' => array(), 'js' => array());
-            $template = array(
-                'css' => '<link rel="stylesheet" href="%s/%s/%s">',
-                'js'  => '<script type="text/javascript" src="%s/%s/%s"></script>',
-            );
             foreach (array('css', 'js') as $type) {
-                foreach ($media[$type] as $item) {
-                    $_media[$type][] = sprintf($template[$type], null, $type, $item);
-                }
+                $_media[$type] = $this->_createMediaLinks($media[$type], $type);
             }
             $this->media = $_media;
         }
@@ -156,142 +156,156 @@ abstract class Apolo_Component_Formulator_Template
     }
 
     /**
+     * Create media links to use in rederMedia
+     * 
+     * @param array  $files List of files
+     * @param string $type  Type of files: js or css
+     *
+     * @internal
+     * @return array
+     */
+    private function _createMediaLinks(array $files, $type)
+    {
+        $types = array(
+            'css' => '<link rel="stylesheet" href="/%s/%s" />',
+            'js'  => '<script type="text/javascript" src="/%s/%s"></script>',
+        );
+        $template   = $types[$type];
+        $mediaLinks = array();
+        foreach ($files as $file) {
+            $mediaLinks[] = sprintf($template, $type, $file);
+        }
+        return $mediaLinks;
+    }
+
+    /**
      * render elements
      *
      * Makes a loop over all elements in array set
-     * 
-     * @param array $elements set of elements
      *
-     * @uses  Apolo_Component_Formulator_Template::renderElement()
+     * @TODO document and coverage all above methods
+     *
      * @return string
      */
     final public function render()
     {
-    	return;
-        $result = '';
-        foreach ($elements as $element) {
-            $part = $this->renderElement($element);
-            $result .= $part;
-        }
-        return $result;
+        $elementsIterator = new RecursiveIteratorIterator(
+            $this->form, RecursiveIteratorIterator::SELF_FIRST
+        );
+        $elementsIterator = $this->form;
+        $output = $this->_renderElements($elementsIterator);
+        return $output;
     }
 
-    /**
-     * Return input hidden csrf
-     * by Neto
-     * @param type array $elements 
-     * @return string
-     */
-    /*final public function renderCsrf(array $elements) 
-    {        
-        return $elements[0]->attrs['input'];
-    }*/
-
-    /**
-     * renderizes an element
-     *
-     * Tryes to render an element based on his type. If exists an method called
-     * 'render{ElementType}' this method is called instead. Othercase uses the
-     * renderDefaultElement method.
-     *
-     * @param Apolo_Component_Formulator_Element $element Formulator Element
-     *
-     * @uses Apolo_Component_Formulator_Element::renderDefaultElement()
-     * @return string
-     */
-    final public function renderElement(Apolo_Component_Formulator_Element $element)
+    final private function _renderElements($elementSet, $parent = null)
     {
-        $type = $element->getType();
-        $method = 'render' . ucfirst(strtolower($type));
-        $method = array($this, $method);
-        if (is_callable($method)) {
-            return call_user_func($method, $element);
+        $output = array();
+        foreach ($elementSet as $item) {
+            if ($parent) {
+                $item->setParent($parent);
+            }
+            $reflection = new ReflectionClass($item);
+            if ($reflection->hasMethod('initRender')) {
+                $item->initRender();
+            }
+            $output[] = $this->_renderElement($item, $item->templateType);
+            if ($reflection->hasMethod('endRender')) {
+                $item->endRender();
+            }
         }
-        return $this->renderDefaultElement($element);
+        return implode('', $output);
     }
 
-    /**
-     * renders default element 
-     * 
-     * @param Apolo_Component_Formulator_Element $element Element to render
-     *
-     * @uses Apolo_Component_Formulator_Template::template()
-     * @return string
-     */
-    public function renderDefaultElement(Apolo_Component_Formulator_Element $element)
+    final private function _renderElement($item, $templateType)
     {
-        $type = $element->getType();
-        if (array_key_exists(strtolower($type), $this->templates)) {
-            $template = $this->templates[strtolower($type)] . PHP_EOL;
+        $output = array();
+        $template = $this->_getTemplate($templateType);
+        $tokens   = preg_split(
+            self::TOKEN_PATTERN,
+            $template, -1, PREG_SPLIT_DELIM_CAPTURE
+        );
+        $output[] = $this->_parseTokens($tokens, $item);
+        return implode('', $output);
+    }
+
+    final private function _getTemplate($templateType)
+    {
+        if (array_key_exists(strtolower($templateType), $this->templates)) {
+            $template = $this->templates[strtolower($templateType)];
         } else if (isset($this->templates['default'])) {
-            $template = $this->templates['default'] . PHP_EOL;
+            $template = $this->templates['default'];
         } else {
-            $template = '{label}: {input}' . PHP_EOL;
+            $template = '{label}: {input}';
         }
-        $method = 'template' . ucfirst(strtolower($type));
+
+        $method = 'template' . ucfirst(strtolower($templateType));
         if (is_callable(array($this, $method))) {
             $template = call_user_func_array(
-                array($this, $method), 
+                array($this, $method),
                 array($template, $element)
             );
-        }
-        return $this->template($template, $element);
-    }
-
-    /**
-     * The render base
-     * 
-     * @param string                             $template The name of template
-     * @param Apolo_Component_Formulator_Element $element  The element to render
-     *
-     * @return void
-     */
-    public function template($template, Apolo_Component_Formulator_Element $element)
-    {
-        if (isset($element->elements)) {
-            $elements = $this->render($element->elements->getElements());
-            $template = str_replace('{elements}', $elements, $template);
-        }
-        if (isset($element->subElements)) {
-            if ('array' === gettype($element->subElements)) {
-                $elements = array();
-                foreach ($element->subElements as $subElement) {
-                    $elements[] = $this->render($subElement->getElements());
-                }
-                $elements = implode('', $elements);
-            } else {
-                $elements = $this->render($element->subElements->getElements());
-            }
-            $template = str_replace('{subElements}', $elements, $template);
-        } else {
-            $template = str_replace('{subElements}', '', $template);
-        }
-        $template = str_replace('{counter}', $this->counter(), $template);
-        $template = str_replace('{uniqid}', uniqid(), $template);
-        preg_match_all('@{\w+}@', $template, $matches);
-        $validStringElements = array(
-            '{elements}', '{uniqid}', '{counter}', '{validation}'
-        );
-        foreach ($matches[0] as $item) {
-            if (in_array($item, $validStringElements)) {
-                continue;
-            }
-            $method = substr($item, 1, -1);
-            $method = 'get' . ucfirst(strtolower($method));
-            $template = str_replace($item, $element->$method(), $template);
         }
         return $template;
     }
 
-    /**
-     * counter
-     *
-     * Returns odd or even over the counter object
-     *
-     * @return string
-     */
-    public function counter()
+    final private function _parseTokens($tokens, $item)
     {
-        return $this->counter++ % 2 ? 'odd' : 'even';
+        $output = array();
+        foreach ($tokens as $token) {
+            $firstLastChars = substr($token, 0, 1) . substr($token, -1, 1);
+            if ($method = $this->_isCall($token)) {
+                $output[] = $this->__run_call($method);
+            } elseif ($filter = $this->_isFilter($token)) {
+                $output[] = $this->__run_filter($item, $filter);
+            } elseif ('{subElements}' === $token) {
+                $output[] = $this->_renderElements($item->subElements, $item);
+            } elseif ($_token = $this->_isToken($token)) {
+                $output[] = $item->attrs[$_token];
+            } else {
+                $output[] = $token;
+            }
+        }
+        return implode('', $output);
+    }
+
+    final private function _isFilter($token)
+    {
+        $replacer = '"filter_" . ucfirst("\1")';
+        return preg_filter(self::FILTER_PATTERN, $replacer, $token);
+    }
+
+    final private function _isCall($token)
+    {
+        return preg_filter(self::CALL_PATTERN, '\1', $token);
+    }
+
+    final private function _isToken($token)
+    {
+        return preg_filter(self::IS_TOKEN_PATTERN, '\1', $token);
+    }
+
+    final private function __run_call($method)
+    {
+        $reflectionFunction = new ReflectionFunction($method);
+        $numberOfRequiredParams = $reflectionFunction
+            ->getNumberOfRequiredParameters();
+        if ($numberOfRequiredParams) {
+            return '';
+        }
+        return $reflectionFunction->invoke();
+    }
+
+    final private function __run_filter($element, $filter)
+    {
+        $reflectionClass = new ReflectionClass($element);
+        if (!$reflectionClass->hasMethod($filter)) {
+            return '';
+        }
+        $filter = $reflectionClass->getMethod($filter);
+        $numberOfRequiredParams = $filter
+            ->getNumberOfRequiredParameters();
+        if (!$filter->isPublic() || $numberOfRequiredParams) {
+        }
+        return $filter->invoke($element);
     }
 }

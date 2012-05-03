@@ -32,6 +32,7 @@ class Apolo_Component_Formulator_Element_Html
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    public $templateType = 'html';
     /**
      * This method create the <samp>html</samp> on the form. 
      * 

@@ -6,7 +6,7 @@ class Apolo_Component_Formulator_Element_Table
 {
     private $_parts = array('thead', 'tfoot', 'tbody');
 
-    public function setElement()
+    public function setElement(array $element)
     {
         // header('Content-type: text/plain');
         $this->_createBasicObjects();

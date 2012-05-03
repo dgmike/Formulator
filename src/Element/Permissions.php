@@ -38,7 +38,7 @@ class Apolo_Component_Formulator_Element_Permissions
      * 
      * @return void
      */
-    public function setElement()
+    public function setElement(array $element)
     {
         $model = Apolo::model('usergroup');
         $adm_permission = $model->getPermissions();

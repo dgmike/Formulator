@@ -18,7 +18,7 @@ class Apolo_Component_Formulator_Element_Textarea
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public function setElement()
+    public function setElement(array $element)
     {
         $input = '<textarea '
                . $this->makeAttributes()

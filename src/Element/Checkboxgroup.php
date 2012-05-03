@@ -34,7 +34,7 @@ class Apolo_Component_Formulator_Element_Checkboxgroup
     extends Apolo_Component_Formulator_Element_Fieldset
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public function setElement()
+    public function setElement(array $element)
     {
         if( !isset($this->element['name']) ) {
             trigger_error('"name" Attribute Mandatory!');

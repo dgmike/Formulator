@@ -18,7 +18,7 @@ class Apolo_Component_Formulator_Element_Tinymce
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public function setElement()
+    public function setElement(array $element)
     {
         #$this->form->addMedia('tiny_mce/jquery.tinymce.js');
         #$this->form->addMedia('tiny_mce/tiny_mce.js');

@@ -296,8 +296,8 @@ abstract class Apolo_Component_Formulator_Element
     /**
      * Formats an attribute
      *
-     * @param string $value         Value of attribute
-     * @param bool   $escaped       Returns the value escaped (htmlentities)
+     * @param string $value   Value of attribute
+     * @param bool   $escaped Returns the value escaped (htmlentities)
      *
      * @return string
      */

@@ -37,7 +37,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template.php';
 class Apolo_Component_Formulator
     implements RecursiveIterator
 {
-	private $_position = 0;
+    private $_position = 0;
 
     const CLASS_PATTERN = '@^[a-z][a-z0-9_]*[a-z0-9]+$@i';
     const DS = DIRECTORY_SEPARATOR;
@@ -234,9 +234,9 @@ class Apolo_Component_Formulator
      */
     public function addElement($element)
     {
-    	if ($element instanceof Apolo_Component_Formulator_Element) {
-        	$this->_elements[] = $element;
-        	return;
+        if ($element instanceof Apolo_Component_Formulator_Element) {
+            $this->_elements[] = $element;
+            return;
         }
         $this->_elements[] = self::element($element);
     }
@@ -449,7 +449,7 @@ class Apolo_Component_Formulator
         return $this->_values;
     }
 
-    /** Iterator Methods 
+    /** Iterator Methods
      *
      * @TODO document and coverage all above methods
      */
@@ -476,7 +476,7 @@ class Apolo_Component_Formulator
 
     public function getChildren()
     {
-    	$elements = array(
+        $elements = array(
             'elements' => $this->_elements[$this->_position]->subElements,
         );
         return new Apolo_Component_Formulator($elements);

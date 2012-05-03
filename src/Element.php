@@ -240,21 +240,16 @@ abstract class Apolo_Component_Formulator_Element
         $context = '', $attribute = 'value', $showAttribute = true,
         $escaped = true
     ) {
-    	$this->_validateAttributeArgs(
-    	    $context, $attribute, $showAttribute, $escaped
-    	);
-        if (!isset($this->attributes[$context])) {
+        $this->_validateAttributeArgs(
+            $context, $attribute, $showAttribute, $escaped
+        );
+        if (!$this->validAttribute($context, $attribute)) {
             return '';
         }
-        $value = empty($this->attributes[$context][$attribute])
-               ? '' : $this->attributes[$context][$attribute];
-        if ($value) {
-            if ($escaped) {
-                $value = htmlentities($value, ENT_QUOTES);
-            }
-            if ($showAttribute) {
-                $value = ' ' . $attribute . '="'.$value.'"';
-            }
+        $value = $this->attributes[$context][$attribute];
+        $value = $this->_formatAttribute($value, $escaped);
+        if ($showAttribute) {
+            $value = ' ' . $attribute . '="'.$value.'"';
         }
         return $value;
     }
@@ -276,21 +271,42 @@ abstract class Apolo_Component_Formulator_Element
     private function _validateAttributeArgs(
         $context, $attribute, $showAttribute, $escaped
     ) {
-        foreach (array('context', 'attribute') as $item) {
-            if (!is_scalar($$item)) {
-                throw new InvalidArgumentException(
-                    'Invalid argument for ' . $item
-                );
-            }
-            $$item = (string) $$item;
+        if (!is_scalar($context)) {
+            throw new InvalidArgumentException(
+                'Invalid argument for context'
+            );
         }
-        foreach (array('showAttribute', 'escaped') as $item) {
-            if (!is_bool($$item)) {
-                throw new InvalidArgumentException(
-                    'Invalid argument for ' . $item
-                );
-            }
+        if (!is_scalar($attribute)) {
+            throw new InvalidArgumentException(
+                'Invalid argument for attribute'
+            );
         }
+        if (!is_bool($showAttribute)) {
+            throw new InvalidArgumentException(
+                'Invalid argument for showAttribute'
+            );
+        }
+        if (!is_bool($escaped)) {
+            throw new InvalidArgumentException(
+                'Invalid argument for escaped'
+            );
+        }
+    }
+
+    /**
+     * Formats an attribute
+     *
+     * @param string $value         Value of attribute
+     * @param bool   $escaped       Returns the value escaped (htmlentities)
+     *
+     * @return string
+     */
+    private function _formatAttribute($value, $escaped)
+    {
+        if ($escaped) {
+            $value = htmlentities($value, ENT_QUOTES);
+        }
+        return $value;
     }
 
     /**
@@ -342,13 +358,25 @@ abstract class Apolo_Component_Formulator_Element
         return $value;
     }
 
+    /**
+     * Retriver the aceept of subElements
+     *
+     * @return bool
+     */
     public function acceptSubElements()
     {
         return $this->acceptSubElements;
     }
 
     /**
-     * @TODO document, test and cover
+     * Sets parent element
+     *
+     * This method is called on render, when this element is a subElement
+     *
+     * @param Apolo_Component_Formulator_Element $parent Parent element
+     *
+     * @TODO cover it
+     * @return void
      */
     public function setParent(Apolo_Component_Formulator_Element $parent)
     {

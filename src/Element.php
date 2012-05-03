@@ -151,15 +151,15 @@ abstract class Apolo_Component_Formulator_Element
     public function validAttribute($context = 'default', $attribute = '')
     {
         foreach (array('context', 'attribute') as $item) {
-        	if (!is_scalar($$item)) {
-            	throw new InvalidArgumentException(
-            	    'Invalid argument for ' . $item
-            	);
+            if (!is_scalar($$item)) {
+                throw new InvalidArgumentException(
+                    'Invalid argument for ' . $item
+                );
             }
             $$item = (string) $$item;
         }
         if (   isset($this->validAttributes[$context])
-        	&& 'data-' === substr($attribute, 0, 5)
+            && 'data-' === substr($attribute, 0, 5)
         ) {
             return true;
         }
@@ -182,10 +182,10 @@ abstract class Apolo_Component_Formulator_Element
         $context = 'default', $attribute = '', $value = ''
     ) {
         foreach (array('context', 'attribute', 'value') as $item) {
-        	if (!is_scalar($$item)) {
-            	throw new InvalidArgumentException(
-            	    'Invalid argument for ' . $item
-            	);
+            if (!is_scalar($$item)) {
+                throw new InvalidArgumentException(
+                    'Invalid argument for ' . $item
+                );
             }
             $$item = (string) $$item;
         }
@@ -210,7 +210,7 @@ abstract class Apolo_Component_Formulator_Element
     public function attributes($context = 'default')
     {
         if (!is_scalar($context)) {
-        	throw new InvalidArgumentException('Invalid argument type');
+            throw new InvalidArgumentException('Invalid argument type');
         }
         $context = (string) $context;
         if (empty($this->attributes[$context])) {
@@ -233,32 +233,16 @@ abstract class Apolo_Component_Formulator_Element
      * @param bool   $showAttribute Shows the attribute name
      * @param bool   $escaped       Returns the value escaped (htmlentities)
      *
-     * @throws InvalidArgumentException when $context or $attribute are not 
-     *  scalar values
-     * @throws InvalidArgumentException when $showAttribute or $escaped are not
-     *  boolean values
+     * @uses Apolo_Component_Formulator_Element::_validateAttributeArgs
      * @return string
      */
     public function attribute(
         $context = '', $attribute = 'value', $showAttribute = true,
         $escaped = true
     ) {
-        foreach (array('context', 'attribute') as $item) {
-        	if (!is_scalar($$item)) {
-            	throw new InvalidArgumentException(
-            	    'Invalid argument for ' . $item
-            	);
-            }
-            $$item = (string) $$item;
-        }
-        foreach (array('showAttribute', 'escaped') as $item) {
-        	if (!is_bool($$item)) {
-            	throw new InvalidArgumentException(
-            	    'Invalid argument for ' . $item
-            	);
-            }
-            $$item = (bool) $$item;
-        }
+    	$this->_validateAttributeArgs(
+    	    $context, $attribute, $showAttribute, $escaped
+    	);
         if (!isset($this->attributes[$context])) {
             return '';
         }
@@ -273,6 +257,40 @@ abstract class Apolo_Component_Formulator_Element
             }
         }
         return $value;
+    }
+
+    /**
+     * Validate typage attributes
+     *
+     * @param string $context       Context where the attribute will be getted
+     * @param string $attribute     Name of attribute
+     * @param bool   $showAttribute Shows the attribute name
+     * @param bool   $escaped       Returns the value escaped (htmlentities)
+     *
+     * @throws InvalidArgumentException when $context or $attribute are not
+     *  scalar values
+     * @throws InvalidArgumentException when $showAttribute or $escaped are not
+     *  boolean values
+     * @return string
+     */
+    private function _validateAttributeArgs(
+        $context, $attribute, $showAttribute, $escaped
+    ) {
+        foreach (array('context', 'attribute') as $item) {
+            if (!is_scalar($$item)) {
+                throw new InvalidArgumentException(
+                    'Invalid argument for ' . $item
+                );
+            }
+            $$item = (string) $$item;
+        }
+        foreach (array('showAttribute', 'escaped') as $item) {
+            if (!is_bool($$item)) {
+                throw new InvalidArgumentException(
+                    'Invalid argument for ' . $item
+                );
+            }
+        }
     }
 
     /**
@@ -312,14 +330,14 @@ abstract class Apolo_Component_Formulator_Element
      */
     public function getValue($escaped = true)
     {
-    	$value = (string) $this->value;
-    	if (!is_bool($escaped)) {
-        	throw new InvalidArgumentException(
-        	    'Invalid argument, must be boolean type'
-        	);
+        $value = (string) $this->value;
+        if (!is_bool($escaped)) {
+            throw new InvalidArgumentException(
+                'Invalid argument, must be boolean type'
+            );
         }
-    	if ($escaped) {
-        	$value = htmlentities($value, ENT_QUOTES);
+        if ($escaped) {
+            $value = htmlentities($value, ENT_QUOTES);
         }
         return $value;
     }

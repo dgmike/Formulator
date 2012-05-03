@@ -8,13 +8,21 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+
     <logging>
         <log type="coverage-html"
-             target="coverage" 
+             target="build/coverage" 
+             title="Apolo Formulator Component"
              charset="utf-8" 
              yui="true" 
-             highlight="true" />
+             highlight="true"
+             lowUpperBound="35" 
+             highLowerBound="70"
+             />
+         <log type="coverage-clover" target="build/logs/clover.xml"/>
+         <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
     </logging>
+
     <filter>
         <blacklist>
             <directory>tests</directory>

@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template.php';
  * @link      http://virgula.uol.com.br
  */
 class Apolo_Component_Formulator
-    implements RecursiveIterator
+    implements IteratorAggregate
 {
     private $_position = 0;
 
@@ -449,46 +449,15 @@ class Apolo_Component_Formulator
         return $this->_values;
     }
 
-    /** Iterator Methods
+    /**
+     * Retrives the Iterator Object
      *
-     * @TODO document and coverage all above methods
+     * This method is used for use simulate a recursive iterator, used in render
+     *
+     * @return ArrayIterator
      */
-
-    public function valid()
+    public function getIterator()
     {
-        return isset($this->_elements[$this->_position]);
-    }
-
-    public function hasChildren()
-    {
-        return (bool) $this->_elements[$this->_position]->subElements;
-    }
-
-    public function next()
-    {
-        $this->_position++;
-    }
-
-    public function current()
-    {
-        return $this->_elements[$this->_position];
-    }
-
-    public function getChildren()
-    {
-        $elements = array(
-            'elements' => $this->_elements[$this->_position]->subElements,
-        );
-        return new Apolo_Component_Formulator($elements);
-    }
-
-    public function rewind()
-    {
-        $this->_position = 0;
-    }
-
-    public function key()
-    {
-        return $this->_position;
+        return new ArrayIterator($this->_elements);
     }
 }

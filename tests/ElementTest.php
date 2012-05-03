@@ -54,7 +54,6 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::__construct
-     * @covers Apolo_Component_Formulator_Element::setAcceptSubElements
      * @covers Apolo_Component_Formulator_Element::setElement
      */
     public function testCallElement2()
@@ -64,7 +63,10 @@ class Apolo_Component_Formulator_ElementTest
             'setElement', 'setSubElements'
         ));
 
-        $element->setAcceptSubElements(true);
+    $reflection = new ReflectionClass($element);
+    $property = $reflection->getProperty('acceptSubElements');
+    $property->setAccessible(true);
+    $property->setValue($element, true);
 
         // allways run setElement
         $element->expects($this->once())
@@ -79,7 +81,6 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::__construct
-     * @covers Apolo_Component_Formulator_Element::setAcceptSubElements
      * @covers Apolo_Component_Formulator_Element::setElement
      */
     public function testCallElement3()
@@ -89,7 +90,10 @@ class Apolo_Component_Formulator_ElementTest
             'setElement', 'setSubElements'
         ));
 
-        $element->setAcceptSubElements(false);
+    $reflection = new ReflectionClass($element);
+    $property = $reflection->getProperty('acceptSubElements');
+    $property->setAccessible(true);
+    $property->setValue($element, false);
 
         // never runs if you can not accept
         $element->expects($this->never())
@@ -170,7 +174,7 @@ class Apolo_Component_Formulator_ElementTest
      */
     public function testValidAttribute4()
     {
-    	$element = $this->createElement();
+        $element = $this->createElement();
         $element->validAttribute(array(), 'whaterver');
     }
 
@@ -181,7 +185,7 @@ class Apolo_Component_Formulator_ElementTest
      */
     public function testValidAttribute5()
     {
-    	$element = $this->createElement();
+        $element = $this->createElement();
         $element->validAttribute('whatever', new stdClass);
     }
 
@@ -254,6 +258,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid argument for context
      */
@@ -265,6 +271,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid argument for attribute
      */
@@ -276,6 +284,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid argument for showAttribute
      */
@@ -289,6 +299,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid argument for escaped
      */
@@ -302,6 +314,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      */
     public function testAttribute5()
     {
@@ -314,6 +328,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @covers Apolo_Component_Formulator_Element::setAttribute
      */
     public function testAttribute6()
@@ -334,6 +350,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @covers Apolo_Component_Formulator_Element::setAttribute
      */
     public function testAttribute7()
@@ -360,6 +378,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @covers Apolo_Component_Formulator_Element::setAttribute
      */
     public function testAttribute8()
@@ -386,6 +406,8 @@ class Apolo_Component_Formulator_ElementTest
 
     /**
      * @covers Apolo_Component_Formulator_Element::attribute
+     * @covers Apolo_Component_Formulator_Element::_validateAttributeArgs
+     * @covers Apolo_Component_Formulator_Element::_formatAttribute
      * @covers Apolo_Component_Formulator_Element::setAttribute
      */
     public function testAttribute9()
@@ -415,20 +437,9 @@ class Apolo_Component_Formulator_ElementTest
     }
 
     /**
-     * @covers Apolo_Component_Formulator_Element::setAcceptSubElements
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Parameter invalid. Must be a boolean
+     * @covers Apolo_Component_Formulator_Element::setSubElements
+     * @covers Apolo_Component_Formulator::element
      */
-    public function testSetAcceptSubElements()
-    {
-    	$element = $this->createElement();
-    	$element->setAcceptSubElements('invalid type, not boolean');
-    }
-
-	/**
-	 * @covers Apolo_Component_Formulator_Element::setSubElements
-	 * @covers Apolo_Component_Formulator::element
-	 */
     public function testSetSubElements()
     {
         $element = $this->createElement();
@@ -454,10 +465,10 @@ class Apolo_Component_Formulator_ElementTest
         $this->assertCount(2, $element->subElements, 'Sets a subElement');
     }
 
-	/**
-	 * @covers Apolo_Component_Formulator_Element::setSubElements
-	 * @covers Apolo_Component_Formulator::element
-	 */
+    /**
+     * @covers Apolo_Component_Formulator_Element::setSubElements
+     * @covers Apolo_Component_Formulator::element
+     */
     public function testSetSubElements2()
     {
         $element = $this->createElement();
@@ -484,10 +495,10 @@ class Apolo_Component_Formulator_ElementTest
         );
     }
 
-	/**
-	 * @covers Apolo_Component_Formulator_Element::setSubElements
-	 * @covers Apolo_Component_Formulator::element
-	 */
+    /**
+     * @covers Apolo_Component_Formulator_Element::setSubElements
+     * @covers Apolo_Component_Formulator::element
+     */
     public function testSetSubElements3()
     {
         $element = $this->createElement();
@@ -535,7 +546,7 @@ class Apolo_Component_Formulator_ElementTest
 
         $this->assertEquals('"my value"', $element->getValue(false));
     }
-    
+
     /**
      * @covers Apolo_Component_Formulator_Element::setValue
      * @covers Apolo_Component_Formulator_Element::getValue
@@ -581,7 +592,10 @@ class Apolo_Component_Formulator_ElementTest
         $this->assertEmpty($element->attributes());
         $this->assertEmpty($element->attributes('anycontext'));
         $element->setAttribute('default', 'data-anytype', '');
-        $this->assertEmpty($element->attributes());
+        $this->assertEquals(
+            ' data-anytype=""',
+            $element->attributes()
+        );
     }
 
     /**
@@ -595,5 +609,57 @@ class Apolo_Component_Formulator_ElementTest
     {
         $element = $this->createElement();
         $element->attributes(new stdClass);
+    }
+
+    /**
+     * @covers Apolo_Component_Formulator_Element::acceptSubElements
+     */
+    public function testAcceptSubElements()
+    {
+        $element = $this->createElement();
+        // default is true
+        $this->assertTrue($element->acceptSubElements());
+    }
+
+    /**
+     * @covers Apolo_Component_Formulator_Element::acceptSubElements
+     */
+    public function testAcceptSubElements2()
+    {
+        $element = $this->createElement();
+
+        $reflection = new ReflectionClass($element);
+        $property = $reflection->getProperty('acceptSubElements');
+        $property->setAccessible(true);
+        $property->setValue($element, true);
+
+        $this->assertTrue($element->acceptSubElements());
+    }
+
+    /**
+     * @covers Apolo_Component_Formulator_Element::acceptSubElements
+     */
+    public function testAcceptSubElements3()
+    {
+        $element = $this->createElement();
+
+        $reflection = new ReflectionClass($element);
+        $property = $reflection->getProperty('acceptSubElements');
+        $property->setAccessible(true);
+        $property->setValue($element, false);
+
+        $this->assertFalse($element->acceptSubElements());
+    }
+
+    /**
+     * @covers Apolo_Component_Formulator_Element::setParent
+     * @covers Apolo_Component_Formulator_Element::getParent
+     */
+    public function testSetParent()
+    {
+        $element  = $this->createElement();
+        $element2 = $this->createElement();
+        $element->setParent($element2);
+        $this->assertEquals($element2, $element->getParent());
     }
 }

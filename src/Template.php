@@ -189,8 +189,8 @@ abstract class Apolo_Component_Formulator_Template
      */
     final public function render()
     {
-        $elementsIterator = new RecursiveIteratorIterator(
-            $this->form, RecursiveIteratorIterator::SELF_FIRST
+        $elementsIterator = new RecursiveArrayIterator(
+            $this->form
         );
         $elementsIterator = $this->form;
         $output = $this->_renderElements($elementsIterator);

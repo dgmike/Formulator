@@ -375,12 +375,21 @@ abstract class Apolo_Component_Formulator_Element
      *
      * @param Apolo_Component_Formulator_Element $parent Parent element
      *
-     * @TODO cover it
      * @return void
      */
     public function setParent(Apolo_Component_Formulator_Element $parent)
     {
         $this->parent = $parent;
+    }
+
+    /**
+     * Retrives the parent Element
+     *
+     * @return Apolo_Component_Formulator_Element | null
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

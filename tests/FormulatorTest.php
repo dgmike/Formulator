@@ -478,6 +478,21 @@ class Apolo_Component_FormulatorTest
     }
 
     /**
+     * @covers Apolo_Component_Formulator::addElement
+     */
+    public function testAddElement6()
+    {
+        $object = $this->getMockForAbstractClass(
+            'Apolo_Component_Formulator_Element',
+            array(
+                array('type' => 'html', 'content' => 'test')
+            )
+        );
+        $this->object->addElement($object);
+        $this->assertCount(1, $this->object->getElements());
+    }
+
+    /**
      * @covers Apolo_Component_Formulator::render
      * @covers Apolo_Component_Formulator::setTemplate
      * @dataProvider gerenateMockTemplateAndTenderTypes
@@ -650,5 +665,33 @@ class Apolo_Component_FormulatorTest
             'Apolo_Component_Formulator_Template_Mocktemplate', 
             get_class($this->object->getTemplate())
         );
+    }
+
+    /**
+     * @covers Apolo_Component_Formulator::getIterator
+     */
+    public function testGetIterator()
+    {
+        $iterator = $this->object->getIterator();
+        $this->assertTrue(
+            $iterator instanceof ArrayIterator
+        );
+        $this->assertCount(0, $iterator);
+    }
+
+    /**
+     * @covers Apolo_Component_Formulator::getIterator
+     */
+    public function testGetIterator2()
+    {
+        $this->object->addElement(array(
+            'type'    => 'html',
+            'content' => '',
+        ));
+        $iterator = $this->object->getIterator();
+        $this->assertTrue(
+            $iterator instanceof ArrayIterator
+        );
+        $this->assertCount(1, $iterator);
     }
 }

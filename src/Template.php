@@ -53,9 +53,7 @@ abstract class Apolo_Component_Formulator_Template
      *
      * @var array $templates
      */
-    public $templates = array(
-        'html' => "<li>{content} - {subElements}{call:uniqid} {filter:test}</li>\n"
-    );
+    public $templates = array();
 
     /**
      * @var array $media Public of stored extenal contents, like CSS or JavaScript

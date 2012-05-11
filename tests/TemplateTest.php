@@ -3,10 +3,7 @@
 class Apolo_Component_Formulator_TemplateTest
     extends PHPUnit_Framework_TestCase
 {
-    public function testRender()
-    {
-        $template = $this->createTemplate();
-        $form = new Apolo_Component_Formulator(array(
+    public $complexElementTree = array(
             'elements' => array(
                 array(
                     'type'    => 'html',
@@ -43,10 +40,7 @@ class Apolo_Component_Formulator_TemplateTest
                     ),
                 )
             ),
-        ));
-        $template->setForm($form);
-        $template->render();
-    }
+        );
 
     public function createTemplate(array $methods = array())
     {
@@ -200,6 +194,50 @@ class Apolo_Component_Formulator_TemplateTest
             . ' method="post">' . PHP_EOL,
             $output
         );
+    }
+
+    public function haveRunkit()
+    {
+        if (!function_exists('runkit_method_redefine')) {
+            $this->markTestSkipped(
+                'Runkit extension not avaliable'
+            );
+        }
+    }
+
+    public function redefineMockFinalOrPrivateMethod($template, $method)
+    {
+        runkit_method_redefine(
+            get_parent_class($template),
+            $method,
+            null,
+            '
+                $arguments = func_get_args();
+                $result = $this->__phpunit_getInvocationMocker()->invoke(
+                    new PHPUnit_Framework_MockObject_Invocation_Object(
+                        "'.get_parent_class($template).'", "'.$method.'", $arguments, $this
+                        )
+                    );
+                return $result;
+            '
+        );
+    }
+
+    public function testRender()
+    {
+        // Verify if php have runKit
+        $this->haveRunkit();
+
+        $template = $this->createTemplate(array('_renderElements'));
+        $this->redefineMockFinalOrPrivateMethod($template, '_renderElements');
+
+        $template->expects($this->once())
+             ->method('_renderElements')
+             ->will($this->returnValue('RENDER ELEMENTS'));
+
+        $form = new Apolo_Component_Formulator($this->complexElementTree);
+        $template->setForm($form);
+        $this->assertEquals('RENDER ELEMENTS', $template->render());
     }
 
 }

@@ -42,7 +42,7 @@ abstract class Apolo_Component_Formulator_Template
             \{call\:    [a-z0-9_]+\}   |   # call methods
             \{[a-z0-9]\.?[a-z0-9_-]*\}     # other tag, default way
         )@isx';
-    
+
     protected $form = null;
 
     /**
@@ -53,9 +53,7 @@ abstract class Apolo_Component_Formulator_Template
      *
      * @var array $templates
      */
-    public $templates = array(
-        'html' => "<li>{content} - {subElements}{call:uniqid} {filter:test}</li>\n"
-    );
+    public $templates = array();
 
     /**
      * @var array $media Public of stored extenal contents, like CSS or JavaScript
@@ -157,7 +155,7 @@ abstract class Apolo_Component_Formulator_Template
 
     /**
      * Create media links to use in rederMedia
-     * 
+     *
      * @param array  $files List of files
      * @param string $type  Type of files: js or css
      *

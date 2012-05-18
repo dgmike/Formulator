@@ -34,13 +34,17 @@ class Apolo_Component_Formulator_Element_Html
 {
     public $templateType = 'html';
 
+    public  $validAttributes    = array(
+        'default' => array('content')
+    );
+
     /**
-     * This method create the <samp>html</samp> on the form. 
-     * 
+     * This method create the <samp>html</samp> on the form.
+     *
      * @return void
      */
     public function setElement(array $element)
     {
-        $this->attrs['content'] = $element['content'];
+        $this->setAttribute('default', 'content', $element['content']);
     }
 }

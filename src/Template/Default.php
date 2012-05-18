@@ -54,6 +54,9 @@ class Apolo_Component_Formulator_Template_Default
         'checkboxgroup' => "<div class=\"checkbox_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
         'radiogroup'    => "<div class=\"radio_wrap\">{fieldsetopen}\n<legend>{legend}</legend>\n{elements}{fieldsetclose}</div>",
         'html'          => '{content}',
+
+        'input'          => "<label{class}>\n<span>{label.content}</span>:\n{input}\n</label>",
+
         'default'       => "<label{class}>\n<span>{label}</span>:\n{input}\n</label>",
     );
 

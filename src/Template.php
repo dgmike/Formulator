@@ -35,14 +35,14 @@ abstract class Apolo_Component_Formulator_Template
 {
     const CALL_PATTERN     = '@^\{call\:([a-z0-9_]+)\}@si';
     const FILTER_PATTERN   = '@^\{filter\:([a-z0-9_]+)\}@sie';
-    const IS_TOKEN_PATTERN = '@^\{([a-z0-9]\.?[a-z0-9_-]*)\}$@i';
+    const IS_TOKEN_PATTERN = '@^\{([a-z0-9]+\.?[a-z0-9_-]*)\}$@i';
 
     const TOKEN_PATTERN  = '@(
             \{filter\:  [a-z0-9_]+\}   |   # filters
             \{call\:    [a-z0-9_]+\}   |   # call methods
-            \{[a-z0-9]\.?[a-z0-9_-]*\}     # other tag, default way
+            \{[a-z0-9]+\.?[a-z0-9]*\}     # other tag, default way
         )@isx';
-    
+
     protected $form = null;
 
     /**
@@ -155,7 +155,7 @@ abstract class Apolo_Component_Formulator_Template
 
     /**
      * Create media links to use in rederMedia
-     * 
+     *
      * @param array  $files List of files
      * @param string $type  Type of files: js or css
      *
@@ -258,7 +258,19 @@ abstract class Apolo_Component_Formulator_Template
             } elseif ('{subElements}' === $token) {
                 $output[] = $this->_renderElements($item->subElements, $item);
             } elseif ($_token = $this->_isToken($token)) {
-                $output[] = $item->attrs[$_token];
+
+                $token=substr($token, 1, -1);
+                $token=explode('.', $token);
+                if (count($token)==1) {
+                    $context='default';
+                    $attribute=$token[0];
+                } else {
+                    list($context, $attribute) = $token;
+                }
+                $output[]=$item->attribute($context, $attribute, false);
+                //$output[] = $item->attrs[$_token];
+
+
             } else {
                 $output[] = $token;
             }

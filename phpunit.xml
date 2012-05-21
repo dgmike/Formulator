@@ -1,6 +1,6 @@
 <phpunit
     bootstrap="tests/bootstrap.php"
-    colors="true"
+    colors="false"
     strict="true"
     >
     <testsuites>

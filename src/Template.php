@@ -217,7 +217,7 @@ abstract class Apolo_Component_Formulator_Template
     final private function _renderElement($item, $templateType)
     {
         $output = array();
-        $template = $this->_getTemplate($templateType);
+        $template = $this->_getTemplate($templateType, $item);
         $tokens   = preg_split(
             self::TOKEN_PATTERN,
             $template, -1, PREG_SPLIT_DELIM_CAPTURE
@@ -226,11 +226,11 @@ abstract class Apolo_Component_Formulator_Template
         return implode('', $output);
     }
 
-    final private function _getTemplate($templateType)
+    final private function _getTemplate($templateType, $element = null)
     {
         if (array_key_exists(strtolower($templateType), $this->templates)) {
             $template = $this->templates[strtolower($templateType)];
-        } else if (isset($this->templates['default'])) {
+        } elseif (isset($this->templates['default'])) {
             $template = $this->templates['default'];
         } else {
             $template = '{label}: {input}';

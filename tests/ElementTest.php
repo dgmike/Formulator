@@ -90,10 +90,10 @@ class Apolo_Component_Formulator_ElementTest
             'setElement', 'setSubElements'
         ));
 
-    $reflection = new ReflectionClass($element);
-    $property = $reflection->getProperty('acceptSubElements');
-    $property->setAccessible(true);
-    $property->setValue($element, false);
+        $reflection = new ReflectionClass($element);
+        $property = $reflection->getProperty('acceptSubElements');
+        $property->setAccessible(true);
+        $property->setValue($element, false);
 
         // never runs if you can not accept
         $element->expects($this->never())

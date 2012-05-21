@@ -42,6 +42,21 @@ class Apolo_Component_Formulator_TemplateTest
             ),
         );
 
+    protected $html = array(
+        'type'    => 'html',
+        'content' => 'TestHTML',
+    );
+
+    protected $subElements = array(
+        'subElements' => array(
+            array(
+                'type'    => 'html',
+                'content' => '',
+                ),
+            ),
+    );
+
+
     public function createTemplate(array $methods = array())
     {
         return $this->getMockForAbstractClass(
@@ -53,6 +68,37 @@ class Apolo_Component_Formulator_TemplateTest
             $callAutoload = true,
             $methods
         );
+    }
+
+    public function createTemplate2(array $methods = array())
+    {
+        return $this->getMock(
+            'Apolo_Component_Formulator_Template',
+            $methods,
+            $arguments = array(),
+            $mockClassName = '',
+            $callOriginalConstructor = TRUE,
+            $callOriginalClone = TRUE,
+            $callAutoload = TRUE
+        );
+    }
+
+    public function createElement(array $methods = array(), $element = null)
+    {
+        if (null === $element) {
+            $element = $this->html;
+        }
+
+        $object = $this->getMockForAbstractClass(
+            'Apolo_Component_Formulator_Element',
+            $arguments = array($element),
+            $mockClassName = '',
+            $callOriginalConstructor = true,
+            $callOriginalClone = true,
+            $callAutoload = true,
+            $mockedMethods = $methods
+        );
+        return $object;
     }
 
     public function getPropertyValue($object, $property)
@@ -208,9 +254,9 @@ class Apolo_Component_Formulator_TemplateTest
     public function redefineMockFinalOrPrivateMethod($template, $method)
     {
         runkit_method_redefine(
-            get_parent_class($template),
+            get_class($template),
             $method,
-            null,
+            '',
             '
                 $arguments = func_get_args();
                 $result = $this->__phpunit_getInvocationMocker()->invoke(
@@ -221,6 +267,9 @@ class Apolo_Component_Formulator_TemplateTest
                 return $result;
             '
         );
+        $reflection = new ReflectionClass($template);
+        $method = $reflection->getMethod($method);
+        $method->setAccessible(true);
     }
 
     public function testRender()
@@ -233,11 +282,172 @@ class Apolo_Component_Formulator_TemplateTest
 
         $template->expects($this->once())
              ->method('_renderElements')
-             ->will($this->returnValue('RENDER ELEMENTS'));
+             ->will($this->returnArgument(0));
 
         $form = new Apolo_Component_Formulator($this->complexElementTree);
         $template->setForm($form);
-        $this->assertEquals('RENDER ELEMENTS', $template->render());
+        $this->assertEquals($form, $template->render());
     }
 
+    public function testRender2()
+    {
+        $this->haveRunkit();
+        $template = $this->createTemplate(array('_renderElement'));
+        $this->redefineMockFinalOrPrivateMethod($template, '_renderElement');
+
+        $template->expects($this->exactly(3))
+             ->method('_renderElement')
+             ->will($this->returnValue('ELEMENT'));
+
+        $form = new Apolo_Component_Formulator($this->complexElementTree);
+        $template->setForm($form);
+        $this->assertEquals(str_repeat('ELEMENT', 3), $template->render());
+    }
+
+    public function testRender3()
+    {
+        $this->haveRunkit();
+
+        $element = $this->getMock('stdClass', array(
+            'initRender', 'endRender'
+        ));
+        $element->templateType = 'html';
+
+        $element->expects($this->once())
+                ->method('initRender');
+
+        $element->expects($this->once())
+                ->method('endRender');
+
+        $template = $this->createTemplate(array('_renderElement'));
+        $this->redefineMockFinalOrPrivateMethod($template, '_renderElement');
+
+        $reflection = new ReflectionClass($template);
+        $method = $reflection->getMethod('_renderElements');
+        $method->setAccessible(true);
+
+
+        $method->invokeArgs($template, array(array($element)));
+    }
+
+    public function testRender4()
+    {
+        $element = $this->getMock('stdClass', array(
+            'setParent'
+        ));
+        $element->templateType = 'html';
+        $element->subElements = $this->html;
+
+        $element->expects($this->once())
+                ->method('setParent');
+
+        $template = $this->createTemplate(array('_renderElement'));
+
+        $reflection = new ReflectionClass($template);
+        $method = $reflection->getMethod('_renderElements');
+        $method->setAccessible(true);
+
+        $method->invokeArgs(
+            $template, 
+            array(
+                array($element),
+                $parentElement = $this->html
+            )
+        );
+    }
+
+    public function testRender5()
+    {
+        $this->haveRunkit();
+        $template = $this->createTemplate(array('_getTemplate'));
+        $this->redefineMockFinalOrPrivateMethod($template, '_getTemplate');
+        $template->expects($this->once())
+            ->method('_getTemplate')
+            ->will($this->returnValue('template'));
+        
+        $reflection = new ReflectionClass($template);
+        $method = $reflection->getMethod('_renderElement');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs(
+            $template, array(
+                $this->html, 'html'
+            )
+        );
+        $this->assertEquals($result, 'template');
+    }
+
+    public function testRender6()
+    {
+        $this->haveRunkit();
+        $template = $this->createTemplate(array('_parseTokens'));
+        $this->redefineMockFinalOrPrivateMethod($template, '_parseTokens');
+        $template->expects($this->once())
+            ->method('_parseTokens')
+            ->will($this->returnValue('tokens regererated'));
+        
+        $method = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs(
+            $template, array(
+                $this->html, 'html'
+            )
+        );
+        $this->assertEquals($result, 'tokens regererated');
+    }
+
+    public function testRender7()
+    {
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_getTemplate');
+        $method->setAccessible(true);
+
+        $templateResult1 = uniqid();
+        $templateResult2 = uniqid();
+
+        $template->templates['mytype']  = $templateResult1;
+        $template->templates['default'] = $templateResult2;
+
+        $this->assertEquals(
+            $method->invokeArgs($template, array('myType')),
+            $templateResult1
+        );
+
+        $this->assertEquals(
+            $method->invokeArgs($template, array('anyothertype')),
+            $templateResult2
+        );
+
+        $this->assertEquals(
+            $method->invokeArgs($template, array('myOtherTemplate')),
+            $templateResult2
+        );
+
+        unset($template->templates['default']);
+
+        $this->assertEquals(
+            $method->invokeArgs($template, array('templateDoNotExists')),
+            '{label}: {input}'
+        );
+    }
+
+    public function testRender8()
+    {
+        $this->haveRunkit();
+
+        $uniqid = uniqid();
+
+        $template = $this->createTemplate2(array('templateWay'));
+
+        $template->expects($this->once())
+            ->method('templateWay')
+            ->will($this->returnValue($uniqid));
+
+        $method = new ReflectionMethod($template, '_getTemplate');
+        $method->setAccessible(true);
+
+        $this->assertEquals(
+            $method->invokeArgs($template, array('way')),
+            $uniqid
+        );
+    }
 }

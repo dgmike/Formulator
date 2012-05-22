@@ -432,8 +432,6 @@ class Apolo_Component_Formulator_TemplateTest
 
     public function testRender8()
     {
-        $this->haveRunkit();
-
         $uniqid = uniqid();
 
         $template = $this->createTemplate2(array('templateWay'));
@@ -450,4 +448,295 @@ class Apolo_Component_Formulator_TemplateTest
             $uniqid
         );
     }
+
+    public function testRender9()
+    {
+        $this->haveRunkit();
+        $template = $this->createTemplate(array('_parseTokens'));
+        $template->templates = array(
+            'html' => 'one{token}two{token2}three',
+        );
+        $this->redefineMockFinalOrPrivateMethod($template, '_parseTokens');
+        $template->expects($this->once())
+            ->method('_parseTokens')
+            ->will($this->returnCallback(function($tokens){
+                    $args = func_get_args();
+                    return implode('º', $args[0]);
+                }));
+        $method = new ReflectionMethod($template, '_renderElement');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs(
+            $template, array(
+                $this->html, 'html'
+            )
+        );
+        $this->assertEquals($result, 'oneº{token}ºtwoº{token2}ºthree');
+    }
+
+    public function testParseTokens()
+    {
+        $template = $this->createTemplate2();
+        $element  = $this->createElement();
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'simple', ' as', ' one,',
+                ' two,', ' three.',
+            ),
+            $element
+        ));
+        $this->assertEquals('simple as one, two, three.', $result);
+    }
+
+    public function testParseTokens2()
+    {
+        $template = $this->createTemplate2();
+        $element  = $this->createElement(array('attribute'));
+
+        $element->expects($this->once())
+            ->method('attribute')
+            ->will($this->returnValue('Michael'));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Say my name: ', '{name}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Say my name: Michael', $result);
+    }
+
+    public function testParseTokens3()
+    {
+        $template = $this->createTemplate2();
+        $element  = $this->createElement(array('attribute'));
+
+        $element->expects($this->once())
+            ->method('attribute')
+            ->will($this->returnArgument(0));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Say my name: ', '{name}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Say my name: default', $result);
+    }
+
+    public function testParseTokens4()
+    {
+        $template = $this->createTemplate2();
+        $element  = $this->createElement(array('attribute'));
+
+        $element->expects($this->once())
+            ->method('attribute')
+            ->will($this->returnArgument(1));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Say my name: ', '{name}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Say my name: name', $result);
+    }
+
+    public function testParseTokens5()
+    {
+        $template = $this->createTemplate2();
+        $element  = $this->createElement(array('attribute'));
+
+        $element->expects($this->once())
+            ->method('attribute')
+            ->will($this->returnArgument(0));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Say my name: ', '{label.age}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Say my name: label', $result);
+    }
+
+    public function testParseTokens6()
+    {
+        $template = $this->createTemplate2();
+        $element  = $this->createElement(array('attribute'));
+
+        $element->expects($this->once())
+            ->method('attribute')
+            ->will($this->returnArgument(1));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Say my name: ', '{label.age}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Say my name: age', $result);
+    }
+
+    public function testParseTokens7()
+    {
+        $this->haveRunkit();
+        $uniqid   = uniqid();
+        $template = $this->createTemplate(array('_runCall'));
+        $element  = $this->createElement();
+
+        $this->redefineMockFinalOrPrivateMethod($template, '_runCall');
+        $template->expects($this->once())
+            ->method('_runCall')
+            ->will($this->returnValue($uniqid));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Run the method: ', '{call:uniqid}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Run the method: '.$uniqid, $result);
+    }
+
+    public function testParseTokens8()
+    {
+        $this->haveRunkit();
+        $uniqid   = uniqid();
+        $template = $this->createTemplate(array('_run_filter'));
+        $element  = $this->createElement();
+
+        $this->redefineMockFinalOrPrivateMethod($template, '_run_filter');
+        $template->expects($this->once())
+            ->method('_run_filter')
+            ->will($this->returnValue($uniqid));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Run the method: ', '{filter:uniqid}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Run the method: '.$uniqid, $result);
+    }
+
+    public function testParseTokens9()
+    {
+        $this->haveRunkit();
+        $uniqid   = uniqid();
+        $template = $this->createTemplate(array('_renderElements'));
+        $element  = $this->createElement();
+
+        $this->redefineMockFinalOrPrivateMethod($template, '_renderElements');
+        $template->expects($this->once())
+            ->method('_renderElements')
+            ->will($this->returnValue($uniqid));
+
+        $method   = new ReflectionMethod($template, '_parseTokens');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($template, array(
+            array(
+                'Run the method: ', '{subElements}'
+            ),
+            $element
+        ));
+        $this->assertEquals('Run the method: '.$uniqid, $result);
+    }
+
+    /**
+     * @dataProvider validInvalidFilters
+     */
+    public function testIsFilter($testString, $testOutput)
+    {
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_isFilter');
+        $method->setAccessible(true);
+        $output = $method->invokeArgs($template, array($testString));
+        $this->assertEquals($testOutput, (bool) $output);
+    }
+
+    public function validInvalidFilters()
+    {
+        return array(
+            array('{filter:name}', true),
+            array('{filter:name7}', true),
+            array('{filter:Age}', true),
+            array('filter', false),
+            array('{}', false),
+            array('filter.name', false),
+            array('filter:name', false),
+            array('{filter}', false),
+            array('{filter.name}', false),
+            array('{filter:_age}', false),
+            array('{filter:a_e', false),
+            array('{filter:name', false),
+            array('filter:name}', false),
+            array('{filter:756}', false),
+        );
+    }
+
+    /**
+     * @dataProvider validInvalidCalls
+     */
+    public function testIsCall($testString, $testOutput)
+    {
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_isCall');
+        $method->setAccessible(true);
+        $output = $method->invokeArgs($template, array($testString));
+        $this->assertEquals($testOutput, (bool) $output);
+    }
+
+    public function validInvalidCalls()
+    {
+        return array(
+            array('{call:name}', true),
+            array('{call:name7}', true),
+            array('{call:Age}', true),
+            array('call', false),
+            array('{}', false),
+            array('call.name', false),
+            array('call:name', false),
+            array('{call}', false),
+            array('{call.name}', false),
+            array('{call:_age}', false),
+            array('{call:a_e', false),
+            array('{call:name', false),
+            array('call:name}', false),
+            array('{call:756}', false),
+        );
+    }
+
+    /*
+    public function testRunCall()
+    {
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_runCall');
+        $method->setAccessible(true);
+        $element = $this->createElement(array('cpto'));
+        $element->expects($this->once())
+            ->method('cpto')
+            ->will($this->returnValue('CPTO'));
+            print_r(get_class_methods($element));
+            die;
+        $method->invokeArgs($template, array(
+            'cpto', $element
+        ));
+    }
+    */
 }

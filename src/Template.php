@@ -33,13 +33,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Renderer.php';
  */
 abstract class Apolo_Component_Formulator_Template
 {
-    const CALL_PATTERN     = '@^\{call\:([a-z0-9_]+)\}@si';
-    const FILTER_PATTERN   = '@^\{filter\:([a-z0-9_]+)\}@sie';
+    const CALL_PATTERN     = '@^\{call\:([a-z][a-z0-9_]*)\}@si';
+    const FILTER_PATTERN   = '@^\{filter\:([a-z][a-z0-9_]*)\}@sie';
     const IS_TOKEN_PATTERN = '@^\{([a-z0-9]+\.?[a-z0-9_-]*)\}$@i';
 
     const TOKEN_PATTERN  = '@(
-            \{filter\:  [a-z0-9_]+\}   |   # filters
-            \{call\:    [a-z0-9_]+\}   |   # call methods
+            \{filter\:  [a-z][a-z0-9_]*\}   |   # filters
+            \{call\:    [a-z][a-z0-9_]*\}   |   # call methods
             \{[a-z0-9]+\.?[a-z0-9]*\}     # other tag, default way
         )@isx';
 
@@ -246,19 +246,18 @@ abstract class Apolo_Component_Formulator_Template
         return $template;
     }
 
-    final private function _parseTokens($tokens, $item)
+    final private function _parseTokens($tokens, $element)
     {
         $output = array();
         foreach ($tokens as $token) {
             $firstLastChars = substr($token, 0, 1) . substr($token, -1, 1);
             if ($method = $this->_isCall($token)) {
-                $output[] = $this->__run_call($method);
+                $output[] = $this->_runCall($method, $element);
             } elseif ($filter = $this->_isFilter($token)) {
-                $output[] = $this->__run_filter($item, $filter);
+                $output[] = $this->_run_filter($element, $filter);
             } elseif ('{subElements}' === $token) {
-                $output[] = $this->_renderElements($item->subElements, $item);
+                $output[] = $this->_renderElements($element->subElements, $element);
             } elseif ($_token = $this->_isToken($token)) {
-
                 $token=substr($token, 1, -1);
                 $token=explode('.', $token);
                 if (count($token)==1) {
@@ -267,10 +266,7 @@ abstract class Apolo_Component_Formulator_Template
                 } else {
                     list($context, $attribute) = $token;
                 }
-                $output[]=$item->attribute($context, $attribute, false);
-                //$output[] = $item->attrs[$_token];
-
-
+                $output[] = $element->attribute($context, $attribute, false);
             } else {
                 $output[] = $token;
             }
@@ -294,8 +290,20 @@ abstract class Apolo_Component_Formulator_Template
         return preg_filter(self::IS_TOKEN_PATTERN, '\1', $token);
     }
 
-    final private function __run_call($method)
+    final private function _runCall($method, $element)
     {
+        $reflectionClass = new ReflectionClass($element);
+        print_r($reflectionClass->getMethods());
+        if ($reflectionClass->hasMethod($method)) {
+            $reflectionMethod = $reflectionClass->getMethod($method);
+            if (   $reflectionMethod->isCallable()
+                && !$reflectionMethod->getNumberOfRequiredParameters()) {
+                return $reflectionMethod->invoke($element);
+            }
+        }
+        if (!function_exists($method)) {
+            return '';
+        }
         $reflectionFunction = new ReflectionFunction($method);
         $numberOfRequiredParams = $reflectionFunction
             ->getNumberOfRequiredParameters();
@@ -305,7 +313,7 @@ abstract class Apolo_Component_Formulator_Template
         return $reflectionFunction->invoke();
     }
 
-    final private function __run_filter($element, $filter)
+    final private function _run_filter($element, $filter)
     {
         $reflectionClass = new ReflectionClass($element);
         if (!$reflectionClass->hasMethod($filter)) {

@@ -301,6 +301,9 @@ abstract class Apolo_Component_Formulator_Template
                 return $reflectionMethod->invoke($element);
             }
         }
+        if (is_callable(array($this, $method))) {
+            return $this->$method($element);
+        }
         if (!function_exists($method)) {
             return '';
         }

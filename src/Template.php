@@ -198,6 +198,12 @@ abstract class Apolo_Component_Formulator_Template
     final private function _renderElements($elementSet, $parent = null)
     {
         $output = array();
+        if ($parent) {
+            $parentReflection = new ReflectionClass($parent);
+            if ($parentReflection->hasMethod('initRenderChilds')) {
+                $parent->initRenderChilds();
+            }
+        }
         foreach ($elementSet as $item) {
             if ($parent) {
                 $item->setParent($parent);
@@ -209,6 +215,11 @@ abstract class Apolo_Component_Formulator_Template
             $output[] = $this->_renderElement($item, $item->templateType);
             if ($reflection->hasMethod('endRender')) {
                 $item->endRender();
+            }
+        }
+        if ($parent) {
+            if ($parentReflection->hasMethod('endRenderChilds')) {
+                $parent->endRenderChilds();
             }
         }
         return implode('', $output);

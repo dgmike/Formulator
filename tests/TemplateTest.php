@@ -651,29 +651,6 @@ class Apolo_Component_Formulator_TemplateTest
     {
         $this->haveRunkit();
         $uniqid   = uniqid();
-        $template = $this->createTemplate(array('_run_filter'));
-        $element  = $this->createElement();
-
-        $this->redefineMockFinalOrPrivateMethod($template, '_run_filter');
-        $template->expects($this->once())
-            ->method('_run_filter')
-            ->will($this->returnValue($uniqid));
-
-        $method   = new ReflectionMethod($template, '_parseTokens');
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($template, array(
-            array(
-                'Run the method: ', '{filter:uniqid}'
-            ),
-            $element
-        ));
-        $this->assertEquals('Run the method: '.$uniqid, $result);
-    }
-
-    public function testParseTokens9()
-    {
-        $this->haveRunkit();
-        $uniqid   = uniqid();
         $template = $this->createTemplate(array('_renderElements'));
         $element  = $this->createElement();
 
@@ -691,38 +668,6 @@ class Apolo_Component_Formulator_TemplateTest
             $element
         ));
         $this->assertEquals('Run the method: '.$uniqid, $result);
-    }
-
-    /**
-     * @dataProvider validInvalidFilters
-     */
-    public function testIsFilter($testString, $testOutput)
-    {
-        $template = $this->createTemplate();
-        $method = new ReflectionMethod($template, '_isFilter');
-        $method->setAccessible(true);
-        $output = $method->invokeArgs($template, array($testString));
-        $this->assertEquals($testOutput, (bool) $output);
-    }
-
-    public function validInvalidFilters()
-    {
-        return array(
-            array('{filter:name}', true),
-            array('{filter:name7}', true),
-            array('{filter:Age}', true),
-            array('filter', false),
-            array('{}', false),
-            array('filter.name', false),
-            array('filter:name', false),
-            array('{filter}', false),
-            array('{filter.name}', false),
-            array('{filter:_age}', false),
-            array('{filter:a_e', false),
-            array('{filter:name', false),
-            array('filter:name}', false),
-            array('{filter:756}', false),
-        );
     }
 
     /**

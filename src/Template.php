@@ -34,11 +34,9 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Renderer.php';
 abstract class Apolo_Component_Formulator_Template
 {
     const CALL_PATTERN     = '@^\{call\:([a-z][a-z0-9_]*)\}@si';
-    const FILTER_PATTERN   = '@^\{filter\:([a-z][a-z0-9_]*)\}@sie';
     const IS_TOKEN_PATTERN = '@^\{([a-z0-9]+\.?[a-z0-9_-]*)\}$@i';
 
     const TOKEN_PATTERN  = '@(
-            \{filter\:  [a-z][a-z0-9_]*\}   |   # filters
             \{call\:    [a-z][a-z0-9_]*\}   |   # call methods
             \{[a-z0-9]+\.?[a-z0-9]*\}     # other tag, default way
         )@isx';
@@ -264,8 +262,6 @@ abstract class Apolo_Component_Formulator_Template
             $firstLastChars = substr($token, 0, 1) . substr($token, -1, 1);
             if ($method = $this->_isCall($token)) {
                 $output[] = $this->_runCall($method, $element);
-            } elseif ($filter = $this->_isFilter($token)) {
-                $output[] = $this->_run_filter($element, $filter);
             } elseif ('{subElements}' === $token) {
                 $output[] = $this->_renderElements($element->subElements, $element);
             } elseif ($_token = $this->_isToken($token)) {
@@ -283,12 +279,6 @@ abstract class Apolo_Component_Formulator_Template
             }
         }
         return implode('', $output);
-    }
-
-    final private function _isFilter($token)
-    {
-        $replacer = '"filter_" . ucfirst("\1")';
-        return preg_filter(self::FILTER_PATTERN, $replacer, $token);
     }
 
     final private function _isCall($token)
@@ -321,19 +311,5 @@ abstract class Apolo_Component_Formulator_Template
             return '';
         }
         return $reflectionFunction->invoke();
-    }
-
-    final private function _run_filter($element, $filter)
-    {
-        $reflectionClass = new ReflectionClass($element);
-        if (!$reflectionClass->hasMethod($filter)) {
-            return '';
-        }
-        $filter = $reflectionClass->getMethod($filter);
-        $numberOfRequiredParams = $filter
-            ->getNumberOfRequiredParameters();
-        if (!$filter->isPublic() || $numberOfRequiredParams) {
-        }
-        return $filter->invoke($element);
     }
 }

@@ -482,6 +482,32 @@ class Apolo_Component_Formulator_TemplateTest
         $this->assertEquals($result, 'oneº{token}ºtwoº{token2}ºthree');
     }
 
+    public function testRender10()
+    {
+        $template = $this->createTemplate();
+        $element  = $this->createElement(array(), null, array('initRenderChilds'));
+        $element->subElements = $this->html;
+        $element->expects($this->once())
+                ->method('initRenderChilds');
+
+        $method = new ReflectionMethod($template, '_renderElements');
+        $method->setAccessible(true);
+        $method->invokeArgs($template, array(array($element), $element));
+    }
+
+    public function testRender11()
+    {
+        $template = $this->createTemplate();
+        $element  = $this->createElement(array(), null, array('endRenderChilds'));
+        $element->subElements = $this->html;
+        $element->expects($this->once())
+                ->method('endRenderChilds');
+
+        $method = new ReflectionMethod($template, '_renderElements');
+        $method->setAccessible(true);
+        $method->invokeArgs($template, array(array($element), $element));
+    }
+
     public function testParseTokens()
     {
         $template = $this->createTemplate2();

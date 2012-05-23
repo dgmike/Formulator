@@ -304,10 +304,9 @@ abstract class Apolo_Component_Formulator_Template
     final private function _runCall($method, $element)
     {
         $reflectionClass = new ReflectionClass($element);
-        print_r($reflectionClass->getMethods());
         if ($reflectionClass->hasMethod($method)) {
             $reflectionMethod = $reflectionClass->getMethod($method);
-            if (   $reflectionMethod->isCallable()
+            if (   $reflectionMethod->isPublic()
                 && !$reflectionMethod->getNumberOfRequiredParameters()) {
                 return $reflectionMethod->invoke($element);
             }

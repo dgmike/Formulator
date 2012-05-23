@@ -83,7 +83,7 @@ class Apolo_Component_Formulator_TemplateTest
         );
     }
 
-    public function createElement(array $methods = array(), $element = null)
+    public function createElement(array $methods = array(), $element = null, $extraMethods = array())
     {
         if (null === $element) {
             $element = $this->html;
@@ -98,6 +98,15 @@ class Apolo_Component_Formulator_TemplateTest
             $callAutoload = true,
             $mockedMethods = $methods
         );
+
+        if ($extraMethods) {
+            $object =
+                $this->getMockBuilder(get_class($object))
+                     ->disableOriginalConstructor()
+                     ->setMethods($extraMethods)
+                     ->getMock();
+        }
+
         return $object;
     }
 
@@ -351,7 +360,7 @@ class Apolo_Component_Formulator_TemplateTest
             $template, 
             array(
                 array($element),
-                $parentElement = $this->html
+                $parentElement = $this->createElement()
             )
         );
     }
@@ -722,21 +731,72 @@ class Apolo_Component_Formulator_TemplateTest
         );
     }
 
-    /*
     public function testRunCall()
     {
         $template = $this->createTemplate();
         $method = new ReflectionMethod($template, '_runCall');
         $method->setAccessible(true);
-        $element = $this->createElement(array('cpto'));
+        $element = $this->createElement(array(), null, array('cpto'));
         $element->expects($this->once())
             ->method('cpto')
             ->will($this->returnValue('CPTO'));
-            print_r(get_class_methods($element));
-            die;
-        $method->invokeArgs($template, array(
+        $output = $method->invokeArgs($template, array(
             'cpto', $element
         ));
+        $this->assertEquals('CPTO', $output);
     }
-    */
+
+    public function testRunCall2()
+    {
+        function myFunction()
+        {
+            return 'My sample';
+        }
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_runCall');
+        $method->setAccessible(true);
+        $element = $this->createElement();
+        $output = $method->invokeArgs($template, array(
+            'myFunction', $element
+        ));
+        $this->assertEquals('My sample', $output);
+    }
+
+    public function testRunCall3()
+    {
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_runCall');
+        $method->setAccessible(true);
+        $element = $this->createElement();
+        $output = $method->invokeArgs($template, array(
+            'inexistentFuncion', $element
+        ));
+        $this->assertEquals('', $output);
+    }
+
+    public function testRunCall4()
+    {
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_runCall');
+        $method->setAccessible(true);
+        $element = $this->createElement();
+        $output = $method->invokeArgs($template, array(
+            'date', // needs more than one parameter
+            $element
+        ));
+        $this->assertEquals('', $output);
+    }
+
+    public function testRunCall5()
+    {
+        $template = $this->createTemplate();
+        $method = new ReflectionMethod($template, '_runCall');
+        $method->setAccessible(true);
+        $element = $this->createElement();
+        $output = $method->invokeArgs($template, array(
+            'setSubElements', // needs more than one parameter
+            $element
+        ));
+        $this->assertEquals('', $output);
+    }
 }

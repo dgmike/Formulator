@@ -14,13 +14,10 @@ class Apolo_Component_Formulator_Template_Debug
         while ($parent = $parent->getParent()) {
             $output = str_replace(':-', ': ', $output) . ' :- ';
         }
-        $output .= str_replace('Apolo_Component_Formulator_Element_', '', get_class($element))
-        ;
-        /*
-                 . '("' 
-                 . trim($element->attribute('default', 'content', false)) 
-                 . '")';
-                 */
+        $class       = get_class($element);
+        $prefix      = preg_quote('Apolo_Component_Formulator_Element_');
+        $elementName = preg_replace("/^$prefix/", '', $class);
+        $output     .= strtolower($elementName);
         return $output;
     }
 }

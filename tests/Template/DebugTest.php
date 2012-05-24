@@ -64,10 +64,63 @@ class Apolo_Component_Formulator_Template_DebugTest
         $this->form->render('elements');
     }
 
-    /*
-    public function testRenderSubElements()
+    public function testRenderSimpleElement()
     {
-        print "\n" . $this->form->render('elements');
+        $element = Apolo_Component_Formulator::element(array(
+            'type'    => 'html',
+            'content' => 'SIMPLE CONTENT',
+        ));
+        $this->assertEquals(":- html", $this->debug->defaultElement($element));
     }
-    */
+
+    public function testRenderSimpleElement2()
+    {
+        $form = new Apolo_Component_Formulator(array(
+        'elements' => array(
+            array(
+            'type'    => 'html',
+            'content' => 'SIMPLE CONTENT',
+            'subElements' => array(
+                array(
+                    'type' => 'html',
+                    'content' => 'INNER HTML',
+                )
+            ),
+            ))));
+        $form->setTemplate('debug');
+        $this->assertEquals(":- html\n:   :- html\n", $form->render('elements'));
+    }
+
+    public function testRenderSimpleElement3()
+    {
+        $html = array('type' => 'html', 'content' => 'SIMPLE');
+        $element = Apolo_Component_Formulator::element($html);
+        $elementChild = Apolo_Component_Formulator::element($html);
+        $elementChild->setParent($element);
+        $this->assertEquals(':   :- html', $this->debug->defaultElement($elementChild));
+    }
+
+    public function testRenderSimpleElement4()
+    {
+        $html = array('type' => 'html', 'content' => 'SIMPLE');
+        $element = Apolo_Component_Formulator::element($html);
+        $elementChild = Apolo_Component_Formulator::element($html);
+        $elementGrandChild = Apolo_Component_Formulator::element($html);
+
+        $elementChild->setParent($element);
+        $elementGrandChild->setParent($elementChild);
+
+        $this->assertEquals(':   :   :- html', $this->debug->defaultElement($elementGrandChild));
+    }
+
+    public function testRenderComplexElement()
+    {
+        $output = ":- html\n"
+                . ":   :- html\n"
+                . ":- html\n"
+                . ":   :- html\n"
+                . ":   :   :- html\n"
+                . ":   :- html\n";
+        $this->assertEquals($output, $this->form->render('elements'));
+    }
 }

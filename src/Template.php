@@ -34,11 +34,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Renderer.php';
 abstract class Apolo_Component_Formulator_Template
 {
     const CALL_PATTERN     = '@^\{call\:([a-z][a-z0-9_]*)\}@si';
-    const IS_TOKEN_PATTERN = '@^\{([a-z0-9]+\.?[a-z0-9_-]*)\}$@i';
+    const IS_TOKEN_PATTERN = '@^\{([a-z0-9]+\.?[a-z0-9_-]*)\!?\}$@i';
 
     const TOKEN_PATTERN  = '@(
             \{call\:    [a-z][a-z0-9_]*\}   |   # call methods
-            \{[a-z0-9]+\.?[a-z0-9]*\}     # other tag, default way
+            \{[a-z0-9]+\.?[a-z0-9]*\!?\}     # other tag, default way
         )@isx';
 
     protected $form = null;
@@ -265,6 +265,7 @@ abstract class Apolo_Component_Formulator_Template
             } elseif ('{subElements}' === $token) {
                 $output[] = $this->_renderElements($element->subElements, $element);
             } elseif ($_token = $this->_isToken($token)) {
+                $escaped = true;
                 $token=substr($token, 1, -1);
                 $token=explode('.', $token);
                 if (count($token)==1) {
@@ -273,7 +274,11 @@ abstract class Apolo_Component_Formulator_Template
                 } else {
                     list($context, $attribute) = $token;
                 }
-                $output[] = $element->attribute($context, $attribute, false);
+                if('!'===substr($attribute, -1)) {
+                    $attribute = substr($attribute, 0, -1);
+                    $escaped = false;
+                }
+                $output[] = $element->attribute($context, $attribute, false, $escaped);
             } else {
                 $output[] = $token;
             }

@@ -8,7 +8,8 @@ class Apolo_Component_Formulator_Element_Input
     protected $type = 'text';
 
     public  $validAttributes    = array(
-        'label' => array('content')
+        'label' => array('name'),
+        'input' => array('attrs', '_type', 'name', 'value', 'id')
     );
 
     public function setElement(array $element)
@@ -17,13 +18,27 @@ class Apolo_Component_Formulator_Element_Input
             throw new DomainException("This Element Needs Label!");
         }
         if ($this->needsLabel && $element['label']){
-            $this->setAttribute('label', 'content', $element['label']);
+            $this->setAttribute('label', 'name', $element['label']);
         }
-        //$this->setAtribute['input','']=$this->generateInputTag($element);
+        
+        $this->setAttribute('input', 'attrs', $this->generateAttrs($element));
     }
 
-    public function generateInputTag(array $element)
+    public function generateAttrs(array $element)
     {
-        return sprintf('<input type="%s" />', $this->type);
+        foreach ($this->validAttributes['input'] as $item) {
+            if(!isset($element[$item])) {
+                continue;
+            }
+            if('attrs' === $item) {
+                continue;
+            }
+            if('_type' == $item) {
+                $this->type = $element[$item];
+                continue;
+            }
+            $this->setAttribute('input', $item, (string) $element[$item]);
+        }
+        return ' type="' . $this->type . '"' . $this->attributes('input');
     }
 }

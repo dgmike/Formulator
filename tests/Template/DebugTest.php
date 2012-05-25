@@ -14,7 +14,7 @@ class Apolo_Component_Formulator_Template_DebugTest
                         array(
                             'type'    => 'html',
                             'content' => 'INNER HTML',
-                        )
+                        ),
                     ),
                 ),
                 array(
@@ -36,7 +36,7 @@ class Apolo_Component_Formulator_Template_DebugTest
                             'content' => 'INNER HTML 2',
                         ),
                     ),
-                )
+                ),
             ),
         ));
         $this->form->setTemplate('debug');

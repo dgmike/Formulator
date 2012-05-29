@@ -773,9 +773,9 @@ class Apolo_Component_Formulator_TemplateTest
 
     public function testDecorator()
     {
-        $template = $this->createTemplate2(array('_decorator'));
+        $template = $this->createTemplate2(array('decorator'));
         $template->expects($this->once())
-            ->method('_decorator')
+            ->method('decorator')
             ->will($this->returnValue('Decorator Runned!'));
         $form = new Apolo_Component_Formulator;
         $form->setTemplate($template);

@@ -190,8 +190,8 @@ abstract class Apolo_Component_Formulator_Template
         );
         $elementsIterator = $this->form;
         $output = $this->_renderElements($elementsIterator);
-        if (is_callable(array($this, '_decorator'))) {
-            $output = $this->_decorator($output);
+        if (is_callable(array($this, 'decorator'))) {
+            $output = $this->decorator($output);
         }
         return $output;
     }

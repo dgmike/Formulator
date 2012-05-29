@@ -179,7 +179,7 @@ abstract class Apolo_Component_Formulator_Template
      *
      * Makes a loop over all elements in array set
      *
-     * @TODO document and coverage all above methods
+     * @TODO document
      *
      * @return string
      */

@@ -5,6 +5,6 @@ class Apolo_Component_Formulator_Template_Default
 {
     public $templates = array(
         'html'  => '{content}',
-        'input' => '<label><span>{label.name}</span>: <input{input.attrs!} /></label>'
+        'input' => '<label><span>{label.name}</span> <input{input.attrs!} /></label>'
     );
 }

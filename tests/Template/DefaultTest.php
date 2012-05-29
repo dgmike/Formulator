@@ -33,7 +33,7 @@ class Apolo_Component_Formulator_Template_DefaultTest
     {
         $this->form->addElement(array('type' => 'input', 'name' => 'nome', 'label' => "Nome"));
         $this->assertEquals(
-            '<label><span>Nome</span>: <input type="text" name="nome" /></label>',
+            '<label><span>Nome</span> <input type="text" name="nome" /></label>',
             $this->form->render('elements')
         );
     }
@@ -42,7 +42,7 @@ class Apolo_Component_Formulator_Template_DefaultTest
     {
         $this->form->addElement(array('type' => 'input', 'name' => 'nome', 'label' => "Nome", 'value' => '"Escreva seu nome"'));
         $this->assertEquals(
-            '<label><span>Nome</span>: <input type="text" name="nome" value="&quot;Escreva seu nome&quot;" /></label>',
+            '<label><span>Nome</span> <input type="text" name="nome" value="&quot;Escreva seu nome&quot;" /></label>',
             $this->form->render('elements')
         );
     }
@@ -52,7 +52,7 @@ class Apolo_Component_Formulator_Template_DefaultTest
         $this->markTestSkipped();
         $this->form->addElement(array('type' => 'input', 'name' => 'nome', 'label' => "Nome", 'value' => '"Escreva seu nome"'));
         $this->assertEquals(
-            '<label><span>Nome</span>: <input type="text" name="nome" value="&quot;Escreva seu nome&quot;" /></label>',
+            '<label><span>Nome</span> <input type="text" name="nome" value="&quot;Escreva seu nome&quot;" /></label>',
             $this->form->render('elements')
         );
     }
@@ -61,7 +61,7 @@ class Apolo_Component_Formulator_Template_DefaultTest
     {
         $this->form->addElement(array('type' => 'input', 'name' => 'nome', 'label' => "Nome", '_type' => 'radio'));
         $this->assertEquals(
-            '<label><span>Nome</span>: <input type="radio" name="nome" /></label>',
+            '<label><span>Nome</span> <input type="radio" name="nome" /></label>',
             $this->form->render('elements')
         );
     }

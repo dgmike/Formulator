@@ -770,4 +770,15 @@ class Apolo_Component_Formulator_TemplateTest
         ));
         $this->assertEquals('', $output);
     }
+
+    public function testDecorator()
+    {
+        $template = $this->createTemplate2(array('_decorator'));
+        $template->expects($this->once())
+            ->method('_decorator')
+            ->will($this->returnValue('Decorator Runned!'));
+        $form = new Apolo_Component_Formulator;
+        $form->setTemplate($template);
+        $this->assertEquals('Decorator Runned!', $form->render('elements'));
+    }
 }

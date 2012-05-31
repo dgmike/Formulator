@@ -15,9 +15,9 @@ class Apolo_Component_Formulator_Element_Input
     public function setElement(array $element)
     {
         if ($this->needsLabel && empty($element['label'])){
-            throw new DomainException("This Element Needs Label!");
+            throw new DomainException('This Element Needs Label!');
         }
-        if ($this->needsLabel && $element['label']){
+        if ($this->needsLabel && isset($element['label'])) {
             $this->setAttribute('label', 'name', $element['label']);
         }
         

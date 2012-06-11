@@ -1,6 +1,6 @@
 <?php
 
-class Apolo_Component_Formulator_Element_Input_CheckboxTest
+class Apolo_Component_Formulator_Element_Input_TextTest
     extends PHPUnit_Framework_TestCase
 {
     protected $form = null;

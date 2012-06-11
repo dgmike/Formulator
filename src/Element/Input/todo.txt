@@ -1,0 +1,11 @@
+//button
+//color
+//datetime 
+//datetime-local 
+//image
+//month 
+//range 
+//reset
+//submit
+//time 
+//week

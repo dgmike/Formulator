@@ -29,6 +29,18 @@ class Apolo_Component_Formulator_Template_DefaultTest
         );
     }
 
+    public function testHtmlIsNotEscaped()
+    {
+        $html = '<p>' . PHP_EOL
+              . '    My example' . PHP_EOL
+              . '</p>';
+        $this->form->addElement(array('type' => 'html', 'content' => $html));
+        $this->assertEquals(
+            $html,
+            $this->form->render('elements')
+        );
+    }
+
     public function testInput()
     {
         $this->form->addElement(array('type' => 'input', 'name' => 'nome', 'label' => "Nome"));

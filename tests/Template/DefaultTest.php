@@ -82,4 +82,16 @@ class Apolo_Component_Formulator_Template_DefaultTest
             $this->form->render('elements')
         );
     }
+
+    public function testRenderAt()
+    {
+        $this->form->addElement(array(
+            'type'  => 'fieldset',
+            'id'    => 'only-a-sample',
+            'class' => 'another-sample',
+        ));
+        $expected = '<fieldset id="only-a-sample" class="another-sample">' . PHP_EOL
+                  . '</fieldset>';
+        $this->assertEquals($expected, $this->form->render('elements'));
+    }
 }

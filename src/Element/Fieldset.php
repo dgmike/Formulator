@@ -33,7 +33,8 @@ class Apolo_Component_Formulator_Element_Fieldset
     implements Apolo_Component_Formulator_ElementInterface
 {
     public $validAttributes = array(
-        'legend' => array('tag'),
+        'legend'   => array('tag'),
+        'fieldset' => array('id', 'class'),
     );
     public $templateType = 'fieldset';
 
@@ -52,6 +53,11 @@ class Apolo_Component_Formulator_Element_Fieldset
             $legend = htmlentities($element['legend']);
             $legend = sprintf('<legend>%s</legend>', $legend);
             $this->setAttribute('legend', 'tag', $legend);
+        }
+        foreach ($this->validAttributes['fieldset'] as $item) {
+            if (!empty($element[$item]) && is_string($element[$item])) {
+                $this->setAttribute('fieldset', $item, $element[$item]);
+            }
         }
     }
 }

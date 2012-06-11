@@ -35,11 +35,16 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Renderer.php';
 abstract class Apolo_Component_Formulator_Template
 {
     const CALL_PATTERN     = '@^\{call\:([a-z][a-z0-9_]*)\}@si';
-    const IS_TOKEN_PATTERN = '@^\{([a-z0-9]+\.?[a-z0-9_-]*)\!?\}$@i';
+    const IS_TOKEN_PATTERN = '@^\{\@?([a-z0-9]+\.?[a-z0-9_-]*)\!?\}$@i';
 
     const TOKEN_PATTERN  = '@(
             \{call\:    [a-z][a-z0-9_]*\}   |   # call methods
-            \{[a-z0-9]+\.?[a-z0-9]*\!?\}     # other tag, default way
+            \{                                  # other tag
+                \@?                                 # can be a group
+                [a-z0-9]+                           # can be over default group
+                \.?[a-z0-9]*                        # can be an attribute over a group
+                \!?                                 # can be escaped
+            \}
         )@isx';
 
     protected $form = null;
@@ -269,6 +274,11 @@ abstract class Apolo_Component_Formulator_Template
             } elseif ('{subElements}' === $token) {
                 $output[] = $this->_renderElements($element->subElements, $element);
             } elseif ($_token = $this->_isToken($token)) {
+                if ('@' === substr($token, 1, 1)) {
+                    $token = substr($token, 2, -1);
+                    $output[] = $element->attributes($token);
+                    continue;
+                }
                 $escaped = true;
                 $token=substr($token, 1, -1);
                 $token=explode('.', $token);

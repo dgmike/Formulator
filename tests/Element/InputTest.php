@@ -96,4 +96,14 @@ class Apolo_Component_Formulator_Element_InputTest
         $output = $form->render('elements');
         $this->assertContains(' type="radio"', $output);
     }
+
+    public function testValue()
+    {
+        $input = $this->input;
+        $input['value'] = 'My Value';
+        $elements = array($input);
+        $form = new Apolo_Component_Formulator(compact('elements'));
+        $output = $form->render('elements');
+        $this->assertContains(' value="My Value"', $output);
+    }
 }

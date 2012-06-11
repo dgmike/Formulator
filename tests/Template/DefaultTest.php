@@ -57,21 +57,6 @@ class Apolo_Component_Formulator_Template_DefaultTest
         );
     }
 
-    public function testInputOtherAttributes()
-    {
-        $this->markTestSkipped();
-        $this->form->addElement(array('type' => 'input', 'name' => 'nome', 'label' => "Nome", 'value' => '"Escreva seu nome"'));
-        $this->assertEquals(
-                        '<label>'
-            . PHP_EOL . '    <span>'
-            . PHP_EOL . '        Nome'
-            . PHP_EOL . '    </span>'
-            . PHP_EOL . '    <input type="text" name="nome" value="&quot;Escreva seu nome&quot;" />'
-            . PHP_EOL . '</label>',
-            $this->form->render('elements')
-        );
-    }
-
     public function testInputType()
     {
         $this->form->addElement(array('type' => 'input', 'name' => 'nome', 'label' => "Nome", '_type' => 'radio'));

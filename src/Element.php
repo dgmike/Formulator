@@ -246,6 +246,12 @@ abstract class Apolo_Component_Formulator_Element
         if (!$this->validAttribute($context, $attribute)) {
             return '';
         }
+        if (!isset($this->attributes)
+            || !isset($this->attributes[$context])
+            || !isset($this->attributes[$context][$attribute])
+        ) {
+            return '';
+        }
         $value = $this->attributes[$context][$attribute];
         $value = $this->_formatAttribute($value, $escaped);
         if ($showAttribute) {

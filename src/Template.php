@@ -30,6 +30,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Renderer.php';
  * @copyright  2011-2012 Virgula S/A
  * @license    Virgula Copyright
  * @link       http://virgula.uol.com.br
+ * @todo       Accept {@group} to render attributes
  */
 abstract class Apolo_Component_Formulator_Template
 {
@@ -276,12 +277,13 @@ abstract class Apolo_Component_Formulator_Template
                     $attribute=$token[0];
                 } else {
                     list($context, $attribute) = $token;
-                }
-                if('!'===substr($attribute, -1)) {
+                } if ('!'===substr($attribute, -1)) {
                     $attribute = substr($attribute, 0, -1);
                     $escaped = false;
                 }
-                $output[] = $element->attribute($context, $attribute, false, $escaped);
+                $output[] = $element->attribute(
+                    $context, $attribute, false, $escaped
+                );
             } else {
                 $output[] = $token;
             }
@@ -305,7 +307,8 @@ abstract class Apolo_Component_Formulator_Template
         if ($reflectionClass->hasMethod($method)) {
             $reflectionMethod = $reflectionClass->getMethod($method);
             if (   $reflectionMethod->isPublic()
-                && !$reflectionMethod->getNumberOfRequiredParameters()) {
+                && !$reflectionMethod->getNumberOfRequiredParameters()
+            ) {
                 return $reflectionMethod->invoke($element);
             }
         }

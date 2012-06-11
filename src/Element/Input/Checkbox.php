@@ -15,6 +15,6 @@ class Apolo_Component_Formulator_Element_Input_Checkbox
 
     public $validAttributes    = array(
         'label' => array('name'),
-        'input' => array('attrs', '_type', 'name', 'value', 'checked', 'id')
+        'input' => array('attrs', '_type', 'name', 'value', 'checked', 'disabled', 'id'),
     );
 }

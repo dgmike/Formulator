@@ -9,7 +9,7 @@ class Apolo_Component_Formulator_Element_Input_Checkbox
     extends Apolo_Component_Formulator_Element_Input
     implements Apolo_Component_Formulator_ElementInterface
 {
-    public    $templateType = 'checkbox';
+    public    $templateType = 'choice';
     protected $needsLabel   = true;
     protected $type         = 'checkbox';
 

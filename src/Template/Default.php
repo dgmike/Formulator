@@ -5,7 +5,7 @@ class Apolo_Component_Formulator_Template_Default
 {
     public $templates = array(
         'html'     => '{content}',
-        'checkbox' => '<label><input{input.attrs!} /><span>{label.name}</span></label>',
+        'choice'   => '<label><input{input.attrs!} /><span>{label.name}</span></label>',
         'input'    => '<label><span>{label.name}</span> <input{input.attrs!} /></label>',
     );
 

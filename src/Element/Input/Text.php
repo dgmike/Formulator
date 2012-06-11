@@ -15,6 +15,6 @@ class Apolo_Component_Formulator_Element_Input_Text
 
     public $validAttributes    = array(
         'label' => array('name'),
-        'input' => array('attrs', '_type', 'name', 'value', 'id')
+        'input' => array('attrs', '_type', 'name', 'value', 'id', 'placeholder', 'readonly', 'disabled'),
     );
 }

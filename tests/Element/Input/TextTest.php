@@ -37,4 +37,24 @@ class Apolo_Component_Formulator_Element_Input_CheckboxTest
                   . '</label>';
         $this->assertEquals($expected, $this->form->render('elements'));
     }
+
+    public function testRenderAttrText()
+    {
+        $this->form->addElement(array(
+            'type'        => 'input_text',
+            'name'        => 'input_test',
+            'value'       => 'linux',
+            'label'       => 'Linux',
+            'placeholder' => 'text',
+            'readonly'    => 'readonly',
+            'disabled'    => 'disabled',
+        ));
+        $expected = '<label>' . PHP_EOL
+                  . '    <span>' . PHP_EOL
+                  . '        Linux' . PHP_EOL
+                  . '    </span>' . PHP_EOL
+                  . '    <input type="text" name="input_test" value="linux" placeholder="text" readonly="readonly" disabled="disabled" />' . PHP_EOL
+                  . '</label>';
+        $this->assertEquals($expected, $this->form->render('elements'));
+    }
 }

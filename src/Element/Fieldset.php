@@ -32,6 +32,11 @@ class Apolo_Component_Formulator_Element_Fieldset
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    public $validAttributes = array(
+        'legend' => array('tag'),
+    );
+    public $templateType = 'fieldset';
+
     /**
      * This method create the <samp>fieldset</samp> with the element 
      * <samp>legend</samp> on the form.
@@ -40,8 +45,13 @@ class Apolo_Component_Formulator_Element_Fieldset
      */
     public function setElement(array $element)
     {
-        $this->attrs['fieldsetopen']  = '<fieldset'.$this->makeAttributes().'>';
-        $this->attrs['fieldsetclose'] = '</fieldset>';
-        $this->attrs['legend'] = $this->getLabel();
+        if (isset($element['legend'])
+            && is_string($element['legend']) 
+            && $element['legend']
+        ) {
+            $legend = htmlentities($element['legend']);
+            $legend = sprintf('<legend>%s</legend>', $legend);
+            $this->setAttribute('legend', 'tag', $legend);
+        }
     }
 }

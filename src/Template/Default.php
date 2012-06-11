@@ -7,6 +7,7 @@ class Apolo_Component_Formulator_Template_Default
         'html'     => '{content!}',
         'choice'   => '<label><input{input.attrs!} /><span>{label.name}</span></label>',
         'input'    => '<label><span>{label.name}</span> <input{input.attrs!} /></label>',
+        'fieldset' => '<fieldset>{legend.tag!}{subElements}</fieldset>',
     );
 
     public function decorator($output)

@@ -9,7 +9,7 @@ class Apolo_Component_Formulator_Element_Input
 
     public  $validAttributes    = array(
         'label' => array('name'),
-        'input' => array('attrs', '_type', 'name', 'value', 'id')
+        'input' => array('attrs', '_type', 'name', 'value', 'id'),
     );
 
     public function setElement(array $element)

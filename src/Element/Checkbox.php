@@ -32,17 +32,47 @@ class Apolo_Component_Formulator_Element_Checkbox
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    public $acceptSubElements = false;
+    public $templateType = 'subelements';
+    public $fieldsetAttributes = array('class', 'id');
+
     /**
-     * This method create the <samp>input</samp> type <samp>checkbox</samp> 
+     * This method create the group of elements with checkboxes
      * on the form.
-     * 
+     *
      * @return void
      */
     public function setElement(array $element)
     {
-        $this->attrs['input'] = '<input type="checkbox"' 
-                              . $this->makeAttributes() 
-                              . $this->getValue().' />';
+        foreach (array('label', 'values', 'name') as $item) {
+            if (empty($element[$item])) {
+                trigger_error("You must set $item in checkbox element type");
+            }
+        }
+        if (!is_array($element['values'])) {
+            trigger_error("\$element['values'] must be an associative array");
+        }
+        $checkboxes = array();
+        foreach ($element['values'] as $value => $label) {
+            $checkbox = array(
+                'type'  => 'input_checkbox',
+                'name'  => $element['name'],
+                'label' => $label,
+                'value' => $value,
+            );
+            array_push($checkboxes, $checkbox);
+        }
+        $fieldset = array(
+                'type'   => 'fieldset',
+                'legend' => $element['label'],
+                'subElements' => $checkboxes,
+            );
+        foreach ($this->fieldsetAttributes as $item) {
+            if (!empty($element[$item])) {
+                $fieldset[$item] = $element[$item];
+            }
+        }
+        $this->setSubElements(array($fieldset));
     }
 }
 

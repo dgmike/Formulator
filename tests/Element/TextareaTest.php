@@ -1,6 +1,6 @@
 <?php
 
-class Apolo_Component_Formulator_Element_InputTest
+class Apolo_Component_Formulator_Element_TextareaTest
     extends PHPUnit_Framework_TestCase
 {
     protected $form;
@@ -37,22 +37,19 @@ class Apolo_Component_Formulator_Element_InputTest
 
     public function testTextareaHasValue()
     {
-        $this->marktestskipped();
         $this->form->addElement(array(
             'type'  => 'textarea',
             'label' => 'Descrição',
-            'name'  => 'descicao',
+            'name'  => 'descricao',
             'value' => 'descrição "completa"',
-            'readonly'  => 'readonly',
-            'disabled'  => 'disabled',
         ));
         $this->assertEquals(
-                        '<label class="nomedaclasse" id="nomedoID">'
+                        '<label>'
             . PHP_EOL . '    <span>'
-            . PHP_EOL . '        Descrição'
+            . PHP_EOL . '        Descri&ccedil;&atilde;o'
             . PHP_EOL . '    </span>'
-            . PHP_EOL . '    <textarea name="descricao" cols="200" rows="100">'
-            . PHP_EOL . '        descrição &quot;completa&quot;'
+            . PHP_EOL . '    <textarea name="descricao">'
+            . PHP_EOL . '        descri&ccedil;&atilde;o &quot;completa&quot;'
             . PHP_EOL . '    </textarea>'
             . PHP_EOL . '</label>',
             $this->form->render('elements')

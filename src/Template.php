@@ -118,7 +118,7 @@ abstract class Apolo_Component_Formulator_Template
             if (!is_string($value)) {
                 continue;
             }
-            $attributes[] = $key . '="'.htmlentities($value, ENT_QUOTES).'"';
+            $attributes[] = $key . '="'.htmlentities($value, ENT_QUOTES, "UTF-8").'"';
         }
         if ($attributes) {
             return ' ' . implode(' ', $attributes);

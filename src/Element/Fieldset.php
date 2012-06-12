@@ -50,7 +50,7 @@ class Apolo_Component_Formulator_Element_Fieldset
             && is_string($element['legend']) 
             && $element['legend']
         ) {
-            $legend = htmlentities($element['legend']);
+            $legend = htmlentities($element['legend'], ENT_QUOTES, "UTF-8");
             $legend = sprintf('<legend>%s</legend>', $legend);
             $this->setAttribute('legend', 'tag', $legend);
         }

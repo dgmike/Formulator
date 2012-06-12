@@ -1,9 +1,23 @@
 <?php
+/**
+ * Formulator Component Fieldset Element
+ *
+ * Use this element to create a <samp>fieldset</samp> on the form.
+ *
+ * PHP Version 5.2
+ *
+ * @category   Component
+ * @package    Formulator
+ * @subpackage Element
+ * @author     Michael Granados <michaelgranados@corp.virgula.com.br>
+ * @author     Michell Campos <michell@corp.virgula.com.br>
+ * @copyright  2011-2012 Virgula S/A
+ * @license    Virgula Copyright
+ * @link       http://virgula.uol.com.br
+ */
 
 /**
- * Formulator Component Element Textarea
- * 
- * This Class create the textarea element 
+ * This Class create the <samp>fieldset</samp> on the form.
  *
  * @category   Component
  * @package    Formulator
@@ -18,13 +32,54 @@ class Apolo_Component_Formulator_Element_Textarea
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    public $validAttributes = array(
+        'default'  => array('label'),
+        'label'    => array('id', 'class'),
+        'textarea' => array('rows', 'cols', 'name', 'readonly', 'disabled'),
+    );
+    public $templateType = 'textarea';
+
+    /**
+     * This method create the <samp>fieldset</samp> with the element 
+     * <samp>legend</samp> on the form.
+     * 
+     * @return void
+     */
     public function setElement(array $element)
     {
-        $input = '<textarea '
-               . $this->makeAttributes()
-               .'>'
-               . $this->getValue(false)
-               . '</textarea>';
-        $this->attrs['input'] = $input;
+        if(empty($element['label']) || !is_string($element['label'])) {
+            trigger_error('You must set the label');
+        }
+
+        $this->setAttribute('default', 'label', utf8_decode($element['label']));
+
+        if(empty($element['name']) || !is_string($element['name'])) {
+            trigger_error('You must set the name');
+        }
+
+        /*$this->setAttribute('textarea', 'name', $element['name']);
+        $this->setAttribute('textarea', 'readonly', $element['readonly']);
+        $this->setAttribute('textarea', 'disabled', $element['disabled']);
+        $this->setAttribute('textarea', 'rows', $element['rows']);
+        $this->setAttribute('textarea', 'cols', $element['cols']);
+        $this->setAttribute('label', 'id', $element['id']);
+        $this->setAttribute('label', 'class', $element['class']);*/
+
+        foreach ($this->validAttributes['label'] as $item) {
+            if (!empty($element[$item]) && is_string($element[$item])) {
+                $this->setAttribute('label', $item, $element[$item]);
+            }
+        }
+
+        foreach ($this->validAttributes['textarea'] as $item) {
+            if (!empty($element[$item])) {
+                $val = $element[$item];
+                $isRowCol = in_array($item, array('rows', 'cols'));
+                if($isRowCol && (!ctype_digit($val) && !is_int($val))) {
+                    trigger_error("$item must be integer or string (as digit)");
+                }
+                $this->setAttribute('textarea', $item, $val);
+            }
+        }
     }
 }

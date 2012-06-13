@@ -46,11 +46,15 @@ class Apolo_Component_Formulator_Element_Checkbox
     {
         foreach (array('label', 'values', 'name') as $item) {
             if (empty($element[$item])) {
-                trigger_error("You must set $item in checkbox element type");
+                throw new DomainException(
+                    "You must set $item in checkbox element type"
+                );
             }
         }
         if (!is_array($element['values'])) {
-            trigger_error("\$element['values'] must be an associative array");
+            throw new DomainException(
+                "\$element['values'] must be an associative array"
+            );
         }
         $checkboxes = array();
         foreach ($element['values'] as $value => $label) {

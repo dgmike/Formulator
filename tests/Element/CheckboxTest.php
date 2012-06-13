@@ -12,7 +12,7 @@ class Apolo_Component_Formulator_Element_CheckboxTest
 
     /**
      * @dataProvider mandatoryAttributes
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException DomainException
      */
     public function testNeedToHaveAttribute($attribute)
     {
@@ -41,7 +41,7 @@ class Apolo_Component_Formulator_Element_CheckboxTest
     }
 
     /**
-     * @expectedException PHPUnit_Framework_Error
+     * @expectedException DomainException
      */
     public function testValuesMustBeArray()
     {

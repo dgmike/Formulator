@@ -359,7 +359,7 @@ abstract class Apolo_Component_Formulator_Element
             );
         }
         if ($escaped) {
-            $value = htmlentities($value, ENT_QUOTES);
+            $value = htmlentities($value, ENT_QUOTES, 'UTF-8');
         }
         return $value;
     }

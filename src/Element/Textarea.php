@@ -51,7 +51,7 @@ class Apolo_Component_Formulator_Element_Textarea
             trigger_error('You must set the label');
         }
 
-        $this->setAttribute('default', 'label', utf8_decode($element['label']));
+        $this->setAttribute('default', 'label', $element['label']);
 
         if(empty($element['name']) || !is_string($element['name'])) {
             trigger_error('You must set the name');

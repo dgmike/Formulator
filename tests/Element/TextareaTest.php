@@ -43,6 +43,7 @@ class Apolo_Component_Formulator_Element_TextareaTest
             'name'  => 'descricao',
             'value' => 'descrição "completa"',
         ));
+
         $this->assertEquals(
                         '<label>'
             . PHP_EOL . '    <span>'

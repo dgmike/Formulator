@@ -1,8 +1,8 @@
 <?php
 /**
- * Formulator Component Fieldset Element
+ * Formulator Component Textarea Element
  *
- * Use this element to create a <samp>fieldset</samp> on the form.
+ * Use this element to create a <samp>textarea</samp> on the form.
  *
  * PHP Version 5.2
  *
@@ -17,7 +17,7 @@
  */
 
 /**
- * This Class create the <samp>fieldset</samp> on the form.
+ * This Class create the <samp>textarea</samp> on the form.
  *
  * @category   Component
  * @package    Formulator
@@ -40,7 +40,7 @@ class Apolo_Component_Formulator_Element_Textarea
     public $templateType = 'textarea';
 
     /**
-     * This method create the <samp>fieldset</samp> with the element 
+     * This method create the <samp>textarea</samp> with the element 
      * <samp>legend</samp> on the form.
      * 
      * @return void
@@ -56,14 +56,6 @@ class Apolo_Component_Formulator_Element_Textarea
         if(empty($element['name']) || !is_string($element['name'])) {
             trigger_error('You must set the name');
         }
-
-        /*$this->setAttribute('textarea', 'name', $element['name']);
-        $this->setAttribute('textarea', 'readonly', $element['readonly']);
-        $this->setAttribute('textarea', 'disabled', $element['disabled']);
-        $this->setAttribute('textarea', 'rows', $element['rows']);
-        $this->setAttribute('textarea', 'cols', $element['cols']);
-        $this->setAttribute('label', 'id', $element['id']);
-        $this->setAttribute('label', 'class', $element['class']);*/
 
         foreach ($this->validAttributes['label'] as $item) {
             if (!empty($element[$item]) && is_string($element[$item])) {

@@ -48,13 +48,13 @@ class Apolo_Component_Formulator_Element_Textarea
     public function setElement(array $element)
     {
         if(empty($element['label']) || !is_string($element['label'])) {
-            trigger_error('You must set the label');
+            throw new DomainException('You must set the label');
         }
 
         $this->setAttribute('default', 'label', $element['label']);
 
         if(empty($element['name']) || !is_string($element['name'])) {
-            trigger_error('You must set the name');
+            throw new DomainException('You must set the name');
         }
 
         foreach ($this->validAttributes['label'] as $item) {
@@ -68,7 +68,7 @@ class Apolo_Component_Formulator_Element_Textarea
                 $val = $element[$item];
                 $isRowCol = in_array($item, array('rows', 'cols'));
                 if($isRowCol && (!ctype_digit($val) && !is_int($val))) {
-                    trigger_error("$item must be integer or string (as digit)");
+                    throw new DomainException("$item must be integer or string (as digit)");
                 }
                 $this->setAttribute('textarea', $item, $val);
             }

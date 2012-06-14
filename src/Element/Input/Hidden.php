@@ -10,7 +10,7 @@ class Apolo_Component_Formulator_Element_Input_Hidden
     implements Apolo_Component_Formulator_ElementInterface
 {
     public    $templateType = 'input';
-    protected $needsLabel   = true;
+    protected $needsLabel   = false;
     protected $type         = 'hidden';
 
     public $validAttributes    = array(

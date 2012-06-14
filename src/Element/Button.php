@@ -1,60 +1,44 @@
 <?php
-/**
- * Formulator Component Button Element
- *
- * Use this element to create a <samp>button</samp> into the form.
- *
- * PHP Version 5.2
- *
- * @category   Component
- * @package    Formulator
- * @subpackage Element
- * @author     Michael Granados <michaelgranados@corp.virgula.com.br>
- * @author     Michell Campos <michell@corp.virgula.com.br>
- * @copyright  2011-2012 Virgula S/A
- * @license    Virgula Copyright
- * @link       http://virgula.uol.com.br
- */
-
-/**
- * This Class create the <samp>button</samp> into the form.
- *
- * @category   Component
- * @package    Formulator
- * @subpackage Element
- * @author     Michael Granados <michaelgranados@corp.virgula.com.br>
- * @author     Michell Campos <michell@corp.virgula.com.br>
- * @copyright  2011-2012 Virgula S/A
- * @license    Virgula Copyright
- * @link       http://virgula.uol.com.br
- */
 class Apolo_Component_Formulator_Element_Button
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
-    /**
-     * This method create the <samp>button</samp> with the text <samp>ok</samp>
-     * on the form.
-     * 
-     * @return void
-     */
+    public $templateType = 'button';
+    protected $needsLabel = true;
+    protected $type = 'text';
+
+    public  $validAttributes    = array(
+        'default' => array('label'),
+        'button' => array('_type', 'name', 'value', 'id'),
+    );
+
     public function setElement(array $element)
     {
-        $especialAttributes = array(
-            'text'       => 'ok',
-            'buttonType' => 'button',
-        );
-        $especial = array();
-        foreach ($especialAttributes as $attribute => $defaultAttr) {
-            if (array_key_exists($attribute, $this->element)) {
-                $especial[$attribute] = $this->element[$attribute];
-                unset($this->element[$attribute]);
-            } else {
-                $especial[$attribute] = $defaultAttr;
-            }
+        if ($this->needsLabel && empty($element['label'])){
+            throw new DomainException('This Element Needs Label!');
         }
-        $this->attrs['attrs'] = ' type="' . $especial['buttonType'].'"' 
-                                          . $this->makeAttributes();
-        $this->attrs['label'] = $especial['text'];
+        if ($this->needsLabel && isset($element['label'])) {
+            $this->setAttribute('label', 'name', $element['label']);
+        }
+        
+        $this->setAttribute('button', 'attrs', $this->generateAttrs($element));
+    }
+
+    public function generateAttrs(array $element)
+    {
+        foreach ($this->validAttributes['button'] as $item) {
+            if(!isset($element[$item])) {
+                continue;
+            }
+            if('attrs' === $item) {
+                continue;
+            }
+            if('_type' == $item) {
+                $this->type = $element[$item];
+                continue;
+            }
+            $this->setAttribute('button', $item, (string) $element[$item]);
+        }
+        return ' type="' . $this->type . '"' . $this->attributes('button');
     }
 }

@@ -10,6 +10,7 @@ class Apolo_Component_Formulator_Template_Default
         'textarea' => '<label{@label}><span>{label}</span><textarea{@textarea}>{call:getValue}</textarea></label>',
         'fieldset' => '<fieldset{@fieldset}>{legend.tag!}{subElements}</fieldset>',
         'subelements' => '{subElements}',
+        'select_option' => '<option value="{value}"{@option}>{label}</option>',
     );
 
     public function decorator($output)

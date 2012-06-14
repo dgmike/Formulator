@@ -56,4 +56,31 @@ class Apolo_Component_Formulator_Element_TextareaTest
             $this->form->render('elements')
         );
     }
+    
+    /**
+     * @expectedException DomainException
+     * @expectedExceptionMessage You must set the label
+     */
+    public function testLabelIsMandatory()
+    {
+        $this->form->addElement(array('type'=>'textarea', 'name'=>'nometeste'));
+    }
+
+    /**
+     * @expectedException DomainException
+     * @expectedExceptionMessage You must set the name
+     */
+    public function testNameIsMandatory()
+    {
+        $this->form->addElement(array('type'=>'textarea', 'label'=>'labelteste'));
+    }
+
+    /**
+     * @expectedException DomainException
+     * @expectedExceptionMessage rows must be integer or string (as digit)
+     */
+    public function testRowsColsAreDigit()
+    {
+        $this->form->addElement(array('type'=>'textarea', 'label'=>'labelteste', 'name'=>'nometeste', 'rows'=>'olarows', 'cols'=>'olacols'));
+    }
 }

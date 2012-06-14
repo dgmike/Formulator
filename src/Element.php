@@ -73,6 +73,31 @@ abstract class Apolo_Component_Formulator_Element
     );
 
     /**
+     * Based on structure defined in
+     *
+     * http://www.w3.org/TR/2012/WD-html5-20120329/global-attributes.html#global-attributes
+     * 
+     */
+    protected $globalAttributes = array(
+            'accesskey', 'class', 'contenteditable', 'contextmenu', 'dir',
+            'draggable', 'dropzone', 'hidden', 'id', 'lang', 'spellcheck',
+            'style', 'tabindex', 'title', 'translate',
+
+            'onabort', 'onblur', 'oncanplay', 'oncanplaythrough', 'onchange',
+            'onclick', 'oncontextmenu', 'oncuechange', 'ondblclick', 'ondrag',
+            'ondragend', 'ondragenter', 'ondragleave', 'ondragover',
+            'ondragstart', 'ondrop', 'ondurationchange', 'onemptied', 'onended',
+            'onerror', 'onfocus', 'oninput', 'oninvalid', 'onkeydown',
+            'onkeypress', 'onkeyup', 'onload', 'onloadeddata',
+            'onloadedmetadata', 'onloadstart', 'onmousedown', 'onmousemove',
+            'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onpause',
+            'onplay', 'onplaying', 'onprogress', 'onratechange', 'onreset',
+            'onscroll', 'onseeked', 'onseeking', 'onselect', 'onshow',
+            'onstalled', 'onsubmit', 'onsuspend', 'ontimeupdate',
+            'onvolumechange', 'onwaiting',
+    );
+
+    /**
      * Attributes generated
      *
      * When script sets the element, it set some attributes to render in
@@ -158,9 +183,11 @@ abstract class Apolo_Component_Formulator_Element
             }
             $$item = (string) $$item;
         }
-        if (   isset($this->validAttributes[$context])
-            && 'data-' === substr($attribute, 0, 5)
-        ) {
+        $isGlobalOrDataAttr = (
+                'data-' === substr($attribute, 0, 5) 
+                || in_array($attribute, $this->globalAttributes)
+        );
+        if (isset($this->validAttributes[$context]) && $isGlobalOrDataAttr) {
             return true;
         }
         return isset($this->validAttributes[$context])

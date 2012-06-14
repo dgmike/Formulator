@@ -37,15 +37,13 @@ class Apolo_Component_Formulator_Element_Select
         if (!empty($element['values']) && is_array($element['values'])) {
             $options = array();
             foreach ($element['values'] as $value => $label) {
-                array_push(
-                    $options,
-                    array(
+                $option = array(
                     'type'  => 'select_option',
                     'name'  => $element['name'],
                     'value' => $value,
                     'label' => $label,
-                    )
                 );
+                array_push($options, $option);
             }
            $this->setSubElements($options);
         }

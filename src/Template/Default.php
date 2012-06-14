@@ -11,6 +11,7 @@ class Apolo_Component_Formulator_Template_Default
         'fieldset' => '<fieldset{@fieldset}>{legend.tag!}{subElements}</fieldset>',
         'subelements' => '{subElements}',
         'select_option' => '<option value="{value}"{@option}>{label}</option>',
+        'button' => '<button type="{type}"{@button}>{label!}{subElements}</button>',
     );
 
     public function decorator($output)

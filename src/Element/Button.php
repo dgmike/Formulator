@@ -4,41 +4,36 @@ class Apolo_Component_Formulator_Element_Button
     implements Apolo_Component_Formulator_ElementInterface
 {
     public $templateType = 'button';
-    protected $needsLabel = true;
-    protected $type = 'text';
+    protected $validTypes = array('button', 'submit', 'reset');
 
     public  $validAttributes    = array(
-        'default' => array('label'),
-        'button' => array('_type', 'name', 'value', 'id'),
+        'default' => array('type', 'label'),
+        'button' => array('name', 'value', 'id', 'disabled'),
     );
 
     public function setElement(array $element)
     {
-        if ($this->needsLabel && empty($element['label'])){
-            throw new DomainException('This Element Needs Label!');
+        if (empty($element['_type']) || !is_string($element['_type'])) {
+            throw new DomainException('You must set the _type');
         }
-        if ($this->needsLabel && isset($element['label'])) {
-            $this->setAttribute('label', 'name', $element['label']);
+
+        if (!in_array($element['_type'], $this->validTypes)) {
+            throw new DomainException(
+                '_type must be: ' . implode(', ', $this->validTypes)
+            );
         }
-        
-        $this->setAttribute('button', 'attrs', $this->generateAttrs($element));
+
+        $this->setAttribute('default', 'type', $element['_type']);
+
+        if (isset($element['label'])){
+            $this->setAttribute('default', 'label', $element['label']);
+        }
+
+        foreach ($element as $k=>$v) {
+            if ($this->validAttribute('button', $k)) {
+                $this->setAttribute('button', $k, $v);
+            }
+        }
     }
 
-    public function generateAttrs(array $element)
-    {
-        foreach ($this->validAttributes['button'] as $item) {
-            if(!isset($element[$item])) {
-                continue;
-            }
-            if('attrs' === $item) {
-                continue;
-            }
-            if('_type' == $item) {
-                $this->type = $element[$item];
-                continue;
-            }
-            $this->setAttribute('button', $item, (string) $element[$item]);
-        }
-        return ' type="' . $this->type . '"' . $this->attributes('button');
-    }
 }

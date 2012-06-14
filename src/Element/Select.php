@@ -18,25 +18,36 @@ class Apolo_Component_Formulator_Element_Select
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    /**
+     * do not accept subElements, it uses "values" instead
+     */
+    public $acceptSubElements = false;
+    public $templateType = 'select';
+    public $validAttributes = array(
+        'default' => array('name'),
+        'select'  => array(),
+    );
+
     public function setElement(array $element)
     {
-        $options = array();
-        foreach ($this->element['values'] as $key => $value) {
-            $options[] = '<option value="'.$key.'"'.$this->_selected($key).'>'.$value.'</option>';
+        if (empty($element['name'])) {
+            throw new DomainException('Select needs "name"');
         }
-        
-        $input = '<select '
-               . $this->makeAttributes()
-               . '>' . implode('', $options) . '</select>';
-               
-        $this->attrs['input'] = $input;
-    }
-
-    private function _selected($value)
-    {
-        if ($this->getValue(false) == $value) 
-        {
-          return ' selected="selected"'; 
+        $this->setAttribute('default', 'name', (string) $element['name']);
+        if (!empty($element['values']) && is_array($element['values'])) {
+            $options = array();
+            foreach ($element['values'] as $value => $label) {
+                array_push(
+                    $options,
+                    array(
+                    'type'  => 'select_option',
+                    'name'  => $element['name'],
+                    'value' => $value,
+                    'label' => $label,
+                    )
+                );
+            }
+           $this->setSubElements($options);
         }
     }
 }

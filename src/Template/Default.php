@@ -10,6 +10,7 @@ class Apolo_Component_Formulator_Template_Default
         'textarea' => '<label{@label}><span>{label}</span><textarea{@textarea}>{call:getValue}</textarea></label>',
         'fieldset' => '<fieldset{@fieldset}>{legend.tag!}{subElements}</fieldset>',
         'subelements' => '{subElements}',
+        'select'   => '<select name="{name}"{@select}>{subElements}</select>',
         'select_option' => '<option value="{value}"{@option}>{label}</option>',
         'button' => '<button type="{type}"{@button}>{label!}{subElements}</button>',
     );

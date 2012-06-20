@@ -41,8 +41,26 @@ class Apolo_Component_Formulator_Element_Input_Hidden
     extends Apolo_Component_Formulator_Element_Input
     implements Apolo_Component_Formulator_ElementInterface
 {
+    /**
+     * This is the template type
+     *
+     * @access public
+     * @var string
+     */
     public    $templateType = 'input';
+    /**
+     * This defines if the legend is mandatory
+     *
+     * @access protected
+     * @var boolean
+     */
     protected $needsLabel   = false;
+    /**
+     * This is the element type
+     *
+     * @access protected
+     * @var string
+     */
     protected $type         = 'hidden';
 
     public $validAttributes    = array(

@@ -42,10 +42,26 @@ class Apolo_Component_Formulator_Element_Input_Checkbox
     implements Apolo_Component_Formulator_ElementInterface
 {
     /**
-     * it uses the 'choice' template type
+     * This is the template type
+     * It uses the 'choice' template type
+     *
+     * @access public
+     * @var string
      */
     public    $templateType = 'choice';
+    /**
+     * This defines if the legend is mandatory
+     *
+     * @access protected
+     * @var boolean
+     */
     protected $needsLabel   = true;
+    /**
+     * This is the element type
+     *
+     * @access protected
+     * @var string
+     */
     protected $type         = 'checkbox';
 
     public $validAttributes    = array(

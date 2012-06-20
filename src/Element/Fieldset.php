@@ -33,7 +33,7 @@ class Apolo_Component_Formulator_Element_Fieldset
     implements Apolo_Component_Formulator_ElementInterface
 {
     /**
-     * This is the list of valid attributes that the input element accepts
+     * This is the list of valid attributes that the fieldset element accepts
      *
      * @access public
      * @var array

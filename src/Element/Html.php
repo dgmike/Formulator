@@ -32,14 +32,27 @@ class Apolo_Component_Formulator_Element_Html
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    /**
+     * This is the template type
+     *
+     * @access public
+     * @var string
+     */
     public $templateType = 'html';
-
+    /**
+     * This is the list of valid attributes that the html element accepts
+     *
+     * @access public
+     * @var array
+     */
     public  $validAttributes    = array(
         'default' => array('content')
     );
 
     /**
      * This method create the <samp>html</samp> on the form.
+     *
+     * @param array $element the array of element's options
      *
      * @return void
      */

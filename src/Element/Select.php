@@ -36,9 +36,24 @@ class Apolo_Component_Formulator_Element_Select
 {
     /**
      * do not accept subElements, it uses "values" instead
+     *
+     * @access public
+     * @var string
      */
     public $acceptSubElements = false;
+    /**
+     * This is the template type
+     *
+     * @access public
+     * @var string
+     */
     public $templateType = 'select';
+    /**
+     * This is the list of valid attributes that the select element accepts
+     *
+     * @access public
+     * @var array
+     */
     public $validAttributes = array(
         'default' => array('name'),
         'select'  => array(),

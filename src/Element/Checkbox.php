@@ -33,10 +33,10 @@ class Apolo_Component_Formulator_Element_Checkbox
     implements Apolo_Component_Formulator_ElementInterface
 {
     /**
-     * This defines if the element accepts sub elements
+     * do not accept subElements, it uses "values" instead
      *
      * @access public
-     * @var boolean
+     * @var string
      */
     public $acceptSubElements = false;
     /**

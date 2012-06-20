@@ -33,10 +33,10 @@ class Apolo_Component_Formulator_Element_Radio
     implements Apolo_Component_Formulator_ElementInterface
 {
     /**
-     * This defines if the element accepts sub elements
+     * do not accept subElements, it uses "values" instead
      *
      * @access public
-     * @var boolean
+     * @var string
      */
     public $acceptSubElements = false;
     /**
@@ -47,7 +47,7 @@ class Apolo_Component_Formulator_Element_Radio
      */
     public $templateType = 'subelements';
     /**
-     * This is the list of valid attributes that the radio element accepts
+     * This is the list attributes that the radio element accepts
      *
      * @access public
      * @var array

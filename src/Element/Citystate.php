@@ -48,10 +48,9 @@ public $templateType = 'subElements';
      */
     public function setElement(array $element)
     {
-if ($this->form) {
-$this->form->addMedia('citystate.js');
-$this->form->addMedia('form.js');
-}
+        if ($this->form) {
+            $this->form->addMedia('citystate.js');
+        }
         $this->setSubElements(
             array(
                 array(
@@ -67,5 +66,4 @@ $this->form->addMedia('form.js');
             )
         );
     }
-
 }

@@ -1,4 +1,20 @@
 <?php
+/**
+ * Formulator Component Select Element
+ *
+ * Use this element to create the input type radio.
+ *
+ * PHP Version 5.2
+ *
+ * @category   Component
+ * @package    Formulator
+ * @subpackage Element
+ * @author     Michael Granados <michaelgranados@corp.virgula.com.br>
+ * @author     Michell Campos <michell@corp.virgula.com.br>
+ * @copyright  2011-2012 Virgula S/A
+ * @license    Virgula Copyright
+ * @link       http://virgula.uol.com.br
+ */
 
 /**
  * Formulator Component Element Select
@@ -27,7 +43,15 @@ class Apolo_Component_Formulator_Element_Select
         'default' => array('name'),
         'select'  => array(),
     );
-
+    
+    /**
+     * This method create the group of elements with selects
+     * on the form.
+     *
+     * @param array $element the array of element's options
+     *
+     * @return void
+     */
     public function setElement(array $element)
     {
         if (empty($element['name'])) {
@@ -45,7 +69,7 @@ class Apolo_Component_Formulator_Element_Select
                 );
                 array_push($options, $option);
             }
-           $this->setSubElements($options);
+            $this->setSubElements($options);
         }
     }
 }

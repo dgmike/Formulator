@@ -238,7 +238,9 @@ class Apolo_Component_Formulator
             $this->_elements[] = $element;
             return;
         }
-        $this->_elements[] = self::element($element);
+        $theElement = self::element($element, $this);
+        $theElement->setForm($this);
+        array_push($this->_elements, $theElement);
     }
 
     /**
@@ -262,7 +264,7 @@ class Apolo_Component_Formulator
      * @static
      * @return Apolo_Component_Formulator_Element
      */
-    static public function element(array $element)
+    static public function element(array $element, Apolo_Component_Formulator $form = null)
     {
         if (empty($element['type'])) {
             throw new InvalidArgumentException(
@@ -280,7 +282,7 @@ class Apolo_Component_Formulator
             throw new DomainException('Class not defined: ' . $class);
         }
         $reflectionClass = new ReflectionClass($class);
-        return $reflectionClass->newInstance($element);
+        return $reflectionClass->newInstance($element, $form);
     }
 
     /**

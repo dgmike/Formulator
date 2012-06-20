@@ -32,16 +32,30 @@ class Apolo_Component_Formulator_Element_Fieldset
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    /**
+     * This is the list of valid attributes that the input element accepts
+     *
+     * @access public
+     * @var array
+     */
     public $validAttributes = array(
         'legend'   => array('tag'),
         'fieldset' => array('id', 'class'),
     );
+    /**
+     * This is the template type
+     *
+     * @access public
+     * @var string
+     */
     public $templateType = 'fieldset';
 
     /**
      * This method create the <samp>fieldset</samp> with the element 
      * <samp>legend</samp> on the form.
      * 
+     * @param array $element the array of element's options
+     *
      * @return void
      */
     public function setElement(array $element)

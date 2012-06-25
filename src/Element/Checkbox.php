@@ -32,13 +32,33 @@ class Apolo_Component_Formulator_Element_Checkbox
     extends Apolo_Component_Formulator_Element
     implements Apolo_Component_Formulator_ElementInterface
 {
+    /**
+     * do not accept subElements, it uses "values" instead
+     *
+     * @access public
+     * @var string
+     */
     public $acceptSubElements = false;
+    /**
+     * This is the template type
+     *
+     * @access public
+     * @var string
+     */
     public $templateType = 'subelements';
+    /**
+     * This is the list of attributes that the fieldset element accepts
+     *
+     * @access public
+     * @var array
+     */
     public $fieldsetAttributes = array('class', 'id');
 
     /**
      * This method create the group of elements with checkboxes
      * on the form.
+     *
+     * @param array $element the array of element's options
      *
      * @return void
      */

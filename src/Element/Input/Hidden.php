@@ -47,7 +47,7 @@ class Apolo_Component_Formulator_Element_Input_Hidden
      * @access public
      * @var string
      */
-    public    $templateType = 'input';
+    public    $templateType = 'input_hidden';
     /**
      * This defines if the legend is mandatory
      *

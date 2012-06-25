@@ -63,7 +63,37 @@ class Apolo_Component_Formulator_Element_Input
      */
     public  $validAttributes    = array(
         'label' => array('name'),
-        'input' => array('attrs', '_type', 'name', 'value', 'id'),
+	'input' => array(
+		// used by element ui
+		'attrs', '_type', 
+		// global attributes
+		// http://www.w3.org/TR/2012/WD-html5-20120329/global-attributes.html#global-attributes
+                'accesskey', 'class', 'contenteditable', 'contextmenu', 'dir',
+		'draggable', 'dropzone', 'hidden', 'id', 'lang', 'spellcheck',
+		'style', 'tabindex', 'title', 'translate',
+		// event attributes
+                'onabort', 'onblur', 'oncanplay', 'oncanplaythrough',
+		'onchange', 'onclick', 'oncontextmenu', 'oncuechange',
+		'ondblclick', 'ondrag', 'ondragend', 'ondragenter', 
+		'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 
+		'ondurationchange', 'onemptied', 'onended', 'onerror', 
+		'onfocus', 'oninput', 'oninvalid', 'onkeydown', 'onkeypress', 
+		'onkeyup', 'onload', 'onloadeddata', 'onloadedmetadata', 
+		'onloadstart', 'onmousedown', 'onmousemove', 'onmouseout', 
+		'onmouseover', 'onmouseup', 'onmousewheel', 'onpause', 'onplay',
+		'onplaying', 'onprogress', 'onratechange', 'onreset',
+		'onscroll', 'onseeked', 'onseeking', 'onselect', 'onshow', 
+		'onstalled', 'onsubmit', 'onsuspend', 'ontimeupdate', 
+		'onvolumechange', 'onwaiting',
+		// particular defined attributes
+		// http://www.w3.org/TR/2012/WD-html5-20120329/the-input-element.html#the-input-element
+		'accept', 'alt', 'autocomplete', 'autofocus', 'checked', 
+		'dirname', 'disabled', 'form', 'formaction', 'formenctype', 
+		'formmethod', 'formnovalidate', 'formtarget', 'height', 'list', 
+		'max', 'maxlength', 'min', 'multiple', 'name', 'pattern', 
+		'placeholder', 'readonly', 'required', 'size', 'src', 'step', 
+		'type', 'value', 'width',
+	),
     );
     
     /**
@@ -94,19 +124,19 @@ class Apolo_Component_Formulator_Element_Input
      */
     public function generateAttrs(array $element)
     {
-        foreach ($this->validAttributes['input'] as $item) {
-            if (!isset($element[$item])) {
-                continue;
-            }
-            if ('attrs' === $item) {
-                continue;
-            }
-            if ('_type' == $item) {
-                $this->type = $element[$item];
-                continue;
-            }
-            $this->setAttribute('input', $item, (string) $element[$item]);
-        }
+	foreach ($element as $key => $value) {
+		if (in_array($key, array('type', 'attrs'))) {
+			continue;
+		}
+		if ('_type' === $key) {
+			$this->type = $value;
+			continue;
+		}
+		if ($this->validAttribute('input', $key)) {
+			$this->setAttribute('input', $key, (string) $value);
+		}
+
+	}
         return ' type="' . $this->type . '"' . $this->attributes('input');
     }
 }

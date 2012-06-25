@@ -62,8 +62,9 @@ class Apolo_Component_Formulator_Element_Phone
 	    ),
 	);
         $number = array(
-            'type' => 'input_number',
+            'type' => 'input_tel',
             'label' => 'Número',
+	    'pattern' => '(\+?[0-9]{2,3}[ \.-]?)?([0-9]{1,4}[ \.-]?)?([0-9]{3,5})[ \.-]?([0-9]{3,5})',
 	    'placeholder' => '+55 11 90000 0000',
             'name' => 'phone_{{id}}[number]',
         );

@@ -13,8 +13,10 @@ class Apolo_Component_Formulator_Element_Input_Text
     protected $needsLabel   = true;
     protected $type         = 'text';
 
+    /*
     public $validAttributes    = array(
         'label' => array('name'),
         'input' => array('attrs', '_type', 'name', 'value', 'id', 'placeholder', 'readonly', 'disabled'),
-    );
+);
+     */
 }

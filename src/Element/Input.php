@@ -93,6 +93,9 @@ class Apolo_Component_Formulator_Element_Input
 		'max', 'maxlength', 'min', 'multiple', 'name', 'pattern', 
 		'placeholder', 'readonly', 'required', 'size', 'src', 'step', 
 		'type', 'value', 'width',
+                // mozilla specification
+		// https://developer.mozilla.org/en/HTML/Element/Input
+                'mozactionhint', 'x-moz-errormessage',
 	),
     );
     

@@ -13,6 +13,7 @@ class Apolo_Component_Formulator_Template_Default
         'select'   => '<select name="{name}"{@select}>{subElements}</select>',
         'select_option' => '<option value="{value}"{@option}>{label}</option>',
         'button' => '<button type="{type}"{@button}>{label!}{subElements}</button>',
+        'wooper' => '{before!}{subElements}{after!}',
     );
 
     public function decorator($output)

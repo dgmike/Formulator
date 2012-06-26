@@ -13,8 +13,10 @@ class Apolo_Component_Formulator_Element_Input_Tel
     protected $needsLabel   = true;
     protected $type         = 'tel';
 
+    /*
     public $validAttributes    = array(
         'label' => array('name'),
-        'input' => array('attrs', '_type', 'name', 'value', 'id', 'placeholder', 'readonly', 'disabled'),
-    );
+        //'input' => array('attrs', '_type', 'name', 'value', 'id', 'placeholder', 'readonly', 'disabled'),
+);
+     */
 }

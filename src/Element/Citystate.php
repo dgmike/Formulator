@@ -39,48 +39,45 @@ class Apolo_Component_Formulator_Element_Citystate
     implements Apolo_Component_Formulator_ElementInterface
 {
     /**
+     * This is the template type
+     *
+     * @access public
+     * @var string
+     */
+    public $templateType = 'subElements';
+    /**
+     * This is the list of valid attributes that the citystate element accepts
+     *
+     * @access public
+     * @var array
+     */
+    public  $validAttributes    = array();
+    /**
      * This method create the <samp>fieldset</samp> with the element 
      * <samp>legend</samp> on the form.
-     * 
+     *
+     * @param array $element the array of element's options
+     *
      * @return void
      */
     public function setElement(array $element)
     {
-        $this->form->addMedia('citystate.js');
-
-        if (empty($this->element['name'])) {
-            trigger_error('Name is mandatory in repetition element type.');
-            $this->element['name'] = '';
+        if ($this->form) {
+            $this->form->addMedia('citystate.js');
         }
-
-        $this->setElements();
-    }
-
-    protected function setElements()
-    {
-        $name = $this->element['name'];
-        $this->element['elements'] = array(
+        $this->setSubElements(
             array(
-                'type'  => 'text', 
-                'label' => 'Estado',
-                'name'  => $name . '[uf]',
-                //'rules' => array('trim', 'isRequired', 'exact_length[2]',),
-            ),
-            array(
-                'type'  => 'text', 
-                'label' => 'Cidade',
-                'name'  => $name . '[city]',
-                //'rules' => array('trim', 'isRequired', 'min_length[2]',),
-            ),
+                array(
+                    'type' => 'input_text',
+                    'label' => 'Estado',
+                    'name' => $element['name'] . '[uf]',
+                ),
+                array(
+                    'type' => 'input_text',
+                    'label' => 'Estado',
+                    'name' => $element['name'] . '[city]',
+                ),
+            )
         );
-
-        $this->element['values'] = $this->form->getValues();
-        $this->element['form'] =& $this->form;
-
-        $reflectionClass = new ReflectionClass(get_class($this->form));
-        $this->elements  = $reflectionClass->newInstance();
-        $this->elements->setForm(&$this->form);
-        $this->elements->config($this->element);
     }
 }
-

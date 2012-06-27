@@ -14,12 +14,38 @@ class Apolo_Component_Formulator_Template_Default
         'select'   => '<select name="{name}"{@select}>{subElements}</select>',
         'select_option' => '<option value="{value}"{@option}>{label}</option>',
         'button'   => '<button type="{type}"{@button}>{label!}{subElements}</button>',
-        'mustache' => '<script type="text/mustache-template"{@default}>{subElements}</script>',
-        'script'   => '<script{@default}>{subElements}</script>',
+        'mustache' => "\n<script type=\"text/mustache-template\"{@default}>{subElements}</script>\n",
+        'script'   => "\n<script{@default}>{subElements}</script>\n",
     );
 
     public function decorator($output)
     {
+        $special_tags = array('textarea', 'pre', 'code', 'script');
+        $special_tags_regexp = implode('|', $special_tags);
+
+        $output = preg_split('@(<(?<tag>'.$special_tags_regexp.')[^>]*[^\/]?>.*<\/\\2>)@Us', $output, -1, PREG_SPLIT_DELIM_CAPTURE);
+        //header('content-type: text/plain');
+        //print_r($output);
+        //die;
+
+        $new_output = array();
+        $special_vars = array();
+        while (list($k, $item) = each($output)) {
+            if (!empty($output[$k+1]) && in_array(trim($output[$k+1]), $special_tags)) {
+                $id = '[#' . sha1(uniqid() . uniqid() . uniqid()) . '#]';
+                $special_vars[$id] = $item;
+                array_push($new_output, $id);
+                next($output);
+                continue;
+            }
+            array_push($new_output, $item);
+        }
+        $output = implode('', $new_output);
+
+        //header('content-type: text/plain');
+        //print_r($output);
+        //die;
+
         $output = trim(preg_replace('@[[:space:]]+@', ' ', $output));
         $output = str_replace('>', '>' . PHP_EOL, $output);
         $output = str_replace('<', PHP_EOL . '<', $output);
@@ -42,6 +68,14 @@ class Apolo_Component_Formulator_Template_Default
                 $spaces++;
             }
         }
+        foreach ($special_vars as $k=>$v) {
+            $output = str_replace($k, $v, $output);
+        }
+
+        //header('content-type: text/plain');
+        //print_r($output);
+        //die;
+
         return trim($output);
     }
 }

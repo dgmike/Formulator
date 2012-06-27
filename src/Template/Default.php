@@ -16,6 +16,7 @@ class Apolo_Component_Formulator_Template_Default
         'button'   => '<button type="{type}"{@button}>{label!}{subElements}</button>',
         'mustache' => "\n<script type=\"text/mustache-template\"{@default}>{subElements}</script>\n",
         'script'   => "\n<script{@default}>{subElements}</script>\n",
+        'wooper'   => '{before!}{subElements}{after!}',
     );
 
     public function decorator($output)

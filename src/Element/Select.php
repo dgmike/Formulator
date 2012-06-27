@@ -56,6 +56,7 @@ class Apolo_Component_Formulator_Element_Select
      */
     public $validAttributes = array(
         'default' => array('name'),
+        'label' => array('name'),
         'select'  => array(),
     );
     
@@ -73,6 +74,9 @@ class Apolo_Component_Formulator_Element_Select
             throw new DomainException('Select needs "name"');
         }
         $this->setAttribute('default', 'name', (string) $element['name']);
+        if (!empty($element['label'])) {
+            $this->setAttribute('label', 'name', (string) $element['label']);
+        }
         if (!empty($element['values']) && is_array($element['values'])) {
             $options = array();
             foreach ($element['values'] as $value => $label) {

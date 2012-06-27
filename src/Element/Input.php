@@ -114,7 +114,9 @@ class Apolo_Component_Formulator_Element_Input
         if (isset($element['label'])) {
             $this->setAttribute('label', 'name', $element['label']);
         }
-        
+        if ($value = $this->getValue()) {
+            $element['value'] = $this->getValue();
+        }
         $this->setAttribute('input', 'attrs', $this->generateAttrs($element));
     }
 

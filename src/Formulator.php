@@ -282,6 +282,14 @@ class Apolo_Component_Formulator
             throw new DomainException('Class not defined: ' . $class);
         }
         $reflectionClass = new ReflectionClass($class);
+        if ($form) {
+            $values = $form->getValues();
+            if (!empty($element['name']) 
+                && array_key_exists($element['name'], $values)
+            ) {
+                $element['value'] = $values[$element['name']];
+            }
+        }
         return $reflectionClass->newInstance($element, $form);
     }
 

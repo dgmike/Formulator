@@ -25,6 +25,10 @@ class Apolo_Component_Formulator_Element_Phone
             'label'   => 'Adicionar',
         );
         $subElements = array($mustache, $button);
+
+        if ($values = $this->retrieveValues($id)) {
+            $subElements[] = $values;
+        }
         $this->setSubElements(
             array(
                 array(
@@ -45,14 +49,14 @@ class Apolo_Component_Formulator_Element_Phone
         );
 	$default = array(
 	    'type' => 'input_radio',
-	    'name' => 'phone_default[]',
+	    'name' => 'phone_default',
 	    'value' => '{{id}}',
 	    'label' => 'Telefone Principal',
 	    'title' => 'Define este telefone como o principal',
 	);
 	$tipo = array(
 	    'type' => 'select',
-	    'name' => 'phone_{{id}}[type]',
+	    'name' => 'phone_{{id}}_type',
 	    'values' => array(
 	    	'residencial' => 'Residencial',
 		'comercial' => 'Comercial',
@@ -66,7 +70,8 @@ class Apolo_Component_Formulator_Element_Phone
             'label' => 'Número',
 	    'pattern' => '(\+?[0-9]{2,3}[ \.-]?)?([0-9]{1,4}[ \.-]?)?([0-9]{3,5})[ \.-]?([0-9]{3,5})',
 	    'placeholder' => '+55 11 90000 0000',
-            'name' => 'phone_{{id}}[number]',
+            'name' => 'phone_{{id}}_number',
+            'value' => '{{value_number}}',
         );
         $button = array(
             'type'    => 'button',
@@ -90,6 +95,34 @@ class Apolo_Component_Formulator_Element_Phone
 	    ),
         );
         return $mustache;
+    }
+
+    public function retrieveValues($id)
+    {
+        if (!isset($this->form)) {
+            return null;
+        }
+        $values = $this->form->getValues();
+        if(!empty($values['phone'])) {
+            $values = json_encode($values['phone']);
+        }
+        return array(
+            'type' => 'coffee',
+            'content' => "
+                setPhones = (phone) ->
+                    id = Math.floor(Math.random()*1000000)
+
+                    html = \$('#telefone_$id')
+                        .mustache({id:id, value_number:phone.number})
+                    
+                    html.find(':radio').attr('checked', true) if phone.default
+                    html.find('select').val(phone.type)
+                    html.appendTo('#telefones_$id')
+
+                values = $values
+                setPhones p for p in values
+            ",
+        );
     }
 }
 

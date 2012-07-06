@@ -102,16 +102,16 @@ class Apolo_Component_Formulator_Element_Phone
         if (!isset($this->form)) {
             return null;
         }
-        $values = $this->form->getValues();
-        if(!empty($values['phone'])) {
-            $values = json_encode($values['phone']);
+        $values = '[]';
+        $formValues = $this->form->getValues();
+        if(!empty($formValues['phone'])) {
+            $values = json_encode($formValues['phone']);
         }
         return array(
             'type' => 'coffee',
             'content' => "
                 setPhones = (phone) ->
                     id = Math.floor(Math.random()*1000000)
-
                     html = \$('#telefone_$id')
                         .mustache({id:id, value_number:phone.number})
                     

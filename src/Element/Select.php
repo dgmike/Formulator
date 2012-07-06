@@ -84,6 +84,7 @@ class Apolo_Component_Formulator_Element_Select
                     'type'  => 'select_option',
                     'name'  => $element['name'],
                     'value' => $value,
+                    '_value' => $value,
                     'label' => $label,
                 );
                 array_push($options, $option);

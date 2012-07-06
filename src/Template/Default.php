@@ -12,7 +12,7 @@ class Apolo_Component_Formulator_Template_Default
         'fieldset' => '<fieldset{@fieldset}>{legend.tag!}{subElements}</fieldset>',
         'subelements' => '{subElements}',
         'select'   => '<label><span>{label.name}</span> <select name="{name}"{@select}>{subElements}</select></label>',
-        'select_option' => '<option value="{value}"{@option}>{label}</option>',
+        'select_option' => '<option {@option}>{label}</option>',
         'button'   => '<button type="{type}"{@button}>{label!}{subElements}</button>',
         'mustache' => "\n<script type=\"text/mustache-template\"{@default}>{subElements}</script>\n",
         'script'   => "\n<script{@default}>{subElements}</script>\n",

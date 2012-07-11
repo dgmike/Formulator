@@ -76,4 +76,22 @@ class Apolo_Component_Formulator_Element_Input_Radio
             'disabled',
         ),
     );
+
+    public function setElement(array $element)
+    {
+        if($this->form) {
+            $values = $this->form->getValues();
+            $name   = preg_replace('@\[\]$@', '', $element['name']);
+
+            if(!empty($values[$name]) && $element['_value'] == $values[$name]) {
+                $element['checked'] = 'checked';
+            }
+
+            //haaaaaaaaack Pegadinha do malandro!
+            if (isset($element['_value'])) {
+                $element['value'] = $element['_value']; 
+            }
+        }
+        parent::setElement($element);
+    }
 }

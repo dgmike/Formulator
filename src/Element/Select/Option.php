@@ -16,9 +16,7 @@ class Apolo_Component_Formulator_Element_Select_Option
         if($this->form) {
             $values = $this->form->getValues();
 
-            if(!empty($element['_value']) && in_array($element['_value'], $values)) {
-                $element['selected'] = 'selected';
-            }
+
 
             if(array_key_exists($element['name'], $values)) {
                 $values = $values[$element['name']];
@@ -28,6 +26,10 @@ class Apolo_Component_Formulator_Element_Select_Option
 
             if(is_string($values)) {
                 $values = array($values);
+            }
+
+            if(!empty($element['_value']) && in_array($element['_value'], $values)) {
+                $element['selected'] = 'selected';
             }
 
         }

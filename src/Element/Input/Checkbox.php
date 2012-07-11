@@ -82,7 +82,7 @@ class Apolo_Component_Formulator_Element_Input_Checkbox
         if($this->form) {
             $values = $this->form->getValues();
             $name   = preg_replace('@\[\]$@', '', $element['name']);
-            if(!empty($values['name']) && in_array($element['value'], $values[$name])) {
+            if(!empty($values[$name]) && in_array($element['value'], $values[$name])) {
                 $element['checked'] = 'checked';
             }
         }

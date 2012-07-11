@@ -82,6 +82,7 @@ class Apolo_Component_Formulator_Element_Radio
                 'type'  => 'input_radio',
                 'name'  => $element['name'],
                 'label' => $label,
+                '_value' => $value,
                 'value' => $value,
             );
             array_push($radios, $radio);

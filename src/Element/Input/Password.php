@@ -69,7 +69,7 @@ class Apolo_Component_Formulator_Element_Input_Password
             'attrs',
             '_type',
             'name',
-            'value',
+            //'value',
             'placeholder',
             'disabled',
             'readonly',

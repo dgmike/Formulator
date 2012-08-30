@@ -293,8 +293,9 @@ class Apolo_Component_Formulator
      * @static
      * @return Apolo_Component_Formulator_Element
      */
-    static public function element(array $element, Apolo_Component_Formulator $form = null)
-    {
+    static public function element(
+        array $element, Apolo_Component_Formulator $form = null
+    ) {
         if (empty($element['type'])) {
             throw new InvalidArgumentException(
                 'The element has no "type" defined'
@@ -550,3 +551,4 @@ class Apolo_Component_Formulator
         return new ArrayIterator($this->_elements);
     }
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

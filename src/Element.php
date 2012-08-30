@@ -155,8 +155,9 @@ abstract class Apolo_Component_Formulator_Element
      * @internal
      * @final
      */
-    final function __construct(array $element, Apolo_Component_Formulator $form = null)
-    {
+    final function __construct(
+        array $element, Apolo_Component_Formulator $form = null
+    ) {
         if ($form) {
             $this->setForm($form);
         }

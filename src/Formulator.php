@@ -88,6 +88,35 @@ class Apolo_Component_Formulator
     private $_template = null;
 
     /**
+     * This is the local path
+     *
+     * Local elements can be created, if you pass a localPath to your elements.
+     * In case, the class of local elements must be:
+     *
+     * Apolo_Component_Formulator_Local_Element_[ElementName]
+     *
+     * So, if you wnat to create an local element that will be called instead
+     * of textarea element, you must create a class like this:
+     *
+     * <pre>
+     * class Apolo_Component_Formulator_Local_Element_Textarea
+     *     extends Apolo_Component_Formulator_Element
+     *     implements Apolo_Component_Formulator_ElementAbstract
+     * {
+     * }
+     * </pre>
+     *
+     * And the filename must be LocalPath/Textarea.php
+     *
+     * You must set the local path using
+     * {@see Apolo_Component_Formulator::setLocalPath()}
+     *
+     * @access private
+     * @var    object
+     */
+     private $_localPath;
+
+    /**
      * Construct the Formulator object
      *
      * You can pass an array with configurations and sub elements of form
@@ -276,8 +305,20 @@ class Apolo_Component_Formulator
         ) {
             throw new InvalidArgumentException('Invalid element "type"');
         }
-        list($file, $class) = self::retriveFileClass4Element($element['type']);
-        include_once $file;
+        $filesAndClasses = self::retriveFileClass4Element(
+            $element['type'], $form
+        );
+        $file_included   = false;
+        foreach ($filesAndClasses as $fileAndClass) {
+            list($file, $class) = $fileAndClass;
+            if ($file_included = file_exists($file)) {
+                include_once $file;
+                break;
+            }
+        }
+        if (!$file_included) {
+            throw new DomainException('Element file not found!');
+        }
         if (!class_exists($class)) {
             throw new DomainException('Class not defined: ' . $class);
         }
@@ -301,8 +342,9 @@ class Apolo_Component_Formulator
      * @internal
      * @return array
      */
-    static public function retriveFileClass4Element($type)
-    {
+    static public function retriveFileClass4Element(
+        $type, Apolo_Component_Formulator $form = null
+    ) {
         $replacements = array(
             array('@_+@', '_'),
             array('@_+(\w)@e', 'self::DS . strtoupper("\\1")'),
@@ -310,13 +352,26 @@ class Apolo_Component_Formulator
         );
         $_patterns = array_map('reset', $replacements);
         $_replaces = array_map('end', $replacements);
-        $file = preg_replace($_patterns, $_replaces, ucfirst($type));
-        $file = 'Element' . self::DS . ucfirst($file) . '.php';
-        $file = preg_replace('@\\' . self::DS . '+@', self::DS, $file);
-        $className = 'Apolo_Component_Formulator_'
-                   . str_replace(self::DS, '_', substr($file, 0, -4));
-        $file = __DIR__ . self::DS . $file;
-        return array($file, $className);
+        $file      = preg_replace($_patterns, $_replaces, ucfirst($type));
+        $file      = 'Element' . self::DS . ucfirst($file) . '.php';
+        $file      = preg_replace('@\\' . self::DS . '+@', self::DS, $file);
+        $className = str_replace(self::DS, '_', substr($file, 0, -4));
+        $bath      = array(
+            array(
+                __DIR__ . self::DS . $file,
+                'Apolo_Component_Formulator_' . $className,
+            ),
+        );
+        if ($form && ($localPath = $form->getLocalPath())) {
+            array_unshift(
+                $bath, 
+                array(
+                    $localPath . self::DS . $className,
+                    'Apolo_Component_Formulator_Local_' . $className,
+                )
+            );
+        }
+        return $bath;
     }
 
     /**
@@ -358,6 +413,30 @@ class Apolo_Component_Formulator
     {
         return $this->_template;
     }
+    
+    /**
+     * Sets the local path for local elements
+     *
+     * @param  string $path Local path, it must exists
+     * @return void
+     */
+     public function setLocalPath($path)
+     {
+         if (!realpath($path)) {
+             throw new DomainException('Local path not found');
+         }
+         $this->_localPath = $path;
+     }
+
+    /**
+     * Gets the local path for local elements
+     *
+     * @return string
+     */
+     public function getLocalPath()
+     {
+         return $this->_localPath;
+     }
 
     /**
      * This method render the form using the template object

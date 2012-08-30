@@ -199,13 +199,16 @@ class Apolo_Component_Formulator
      */
     public function config($config)
     {
+        if (isset($config['localPath'])) {
+            $this->setLocalPath($config['localPath']);
+        }
         if (isset($config['values'])) {
             $this->_values = $config['values'];
         }
         if (isset($config['elements'])) {
             $this->addElements($config['elements']);
         }
-        unset($config['elements'], $config['values']);
+        unset($config['elements'], $config['values'], $config['localPath']);
         $this->_config = $config + $this->_config;
         return $this;
     }

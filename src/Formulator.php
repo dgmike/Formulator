@@ -370,7 +370,7 @@ class Apolo_Component_Formulator
             array_unshift(
                 $bath, 
                 array(
-                    $localPath . self::DS . $className,
+                    $localPath . ltrim($file, 'Element'),
                     'Apolo_Component_Formulator_Local_' . $className,
                 )
             );

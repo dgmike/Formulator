@@ -105,7 +105,8 @@ class Apolo_Component_Formulator_Element_Select
             }
         }
         if (!empty($element['label'])) {
-            $this->setAttribute('label', 'name', (string) $element['label']);
+            $name = sprintf('<span>%s</span>', (string) $element['label']);
+            $this->setAttribute('label', 'name', $name);
         }
         if (!empty($element['values']) && is_array($element['values'])) {
             $options = array();
@@ -120,6 +121,9 @@ class Apolo_Component_Formulator_Element_Select
                 array_push($options, $option);
             }
             $this->setSubElements($options);
+        }
+        if ($this->attribute('label', 'name')) {
+            $this->setAttribute('label', 'name', $name);
         }
     }
 }

@@ -36,8 +36,6 @@ class Apolo_Component_Formulator_Element_SelectTest
             'name' => 'empty',
         ));
         $expected = '<label>' . PHP_EOL
-                  . '    <span>' . PHP_EOL
-                  . '    </span>' . PHP_EOL
                   . '    <select name="empty">' . PHP_EOL
                   . '    </select>' . PHP_EOL
                   . '</label>';
@@ -71,8 +69,6 @@ class Apolo_Component_Formulator_Element_SelectTest
             ),
         ));
         $expected = '<label>' . PHP_EOL
-                  . '    <span>' . PHP_EOL
-                  . '    </span>' . PHP_EOL
                   . '    <select name="sex">' . PHP_EOL
                   . '        <option value="m">' . PHP_EOL
                   . '            male' . PHP_EOL
@@ -101,8 +97,6 @@ class Apolo_Component_Formulator_Element_SelectTest
             )
         ));
         $expected = '<label>' . PHP_EOL
-                  . '    <span>' . PHP_EOL
-                  . '    </span>' . PHP_EOL
                   . '    <select name="os" multiple="multiple" size="5" autofocus="autofocus" required="required">' . PHP_EOL
                   . '        <option value="win">' . PHP_EOL 
                   . '            Windows' . PHP_EOL

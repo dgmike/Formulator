@@ -44,6 +44,22 @@ class Apolo_Component_Formulator_Element_SelectTest
         $this->assertEquals($expected, $this->form->render('elements'));
     }
 
+    public function testCreateSelectWithLabel()
+    {
+        $this->form->addElement(array(
+            'type'  => 'select',
+            'label' => 'Empty Select Element',
+            'name'  => 'empty',
+        ));
+        $expected = '<label>' . PHP_EOL
+                  . '    <span>' . PHP_EOL
+                  . '        Empty Select Element' . PHP_EOL
+                  . '    </span>' . PHP_EOL
+                  . '    <select name="empty">' . PHP_EOL
+                  . '    </select>' . PHP_EOL
+                  . '</label>';
+        $this->assertEquals($expected, $this->form->render('elements'));
+    }
     public function testCreateOneOption()
     {
         $this->form->addElement(array(

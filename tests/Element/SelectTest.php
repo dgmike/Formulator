@@ -35,7 +35,12 @@ class Apolo_Component_Formulator_Element_SelectTest
             'type' => 'select',
             'name' => 'empty',
         ));
-        $expected = '<select name="empty">' . PHP_EOL . '</select>';
+        $expected = '<label>' . PHP_EOL
+                  . '    <span>' . PHP_EOL
+                  . '    </span>' . PHP_EOL
+                  . '    <select name="empty">' . PHP_EOL
+                  . '    </select>' . PHP_EOL
+                  . '</label>';
         $this->assertEquals($expected, $this->form->render('elements'));
     }
 
@@ -49,14 +54,18 @@ class Apolo_Component_Formulator_Element_SelectTest
                 'f' => 'female',
             ),
         ));
-        $expected = '<select name="sex">' . PHP_EOL
-                  . '    <option value="m">' . PHP_EOL
-                  . '        male' . PHP_EOL
-                  . '    </option>' . PHP_EOL
-                  . '    <option value="f">' . PHP_EOL
-                  . '        female' . PHP_EOL
-                  . '    </option>' . PHP_EOL
-                  . '</select>';
+        $expected = '<label>' . PHP_EOL
+                  . '    <span>' . PHP_EOL
+                  . '    </span>' . PHP_EOL
+                  . '    <select name="sex">' . PHP_EOL
+                  . '        <option value="m">' . PHP_EOL
+                  . '            male' . PHP_EOL
+                  . '        </option>' . PHP_EOL
+                  . '        <option value="f">' . PHP_EOL
+                  . '            female' . PHP_EOL
+                  . '        </option>' . PHP_EOL
+                  . '    </select>' . PHP_EOL
+                  . '</label>';
         $this->assertEquals($expected, $this->form->render('elements'));
     }
     

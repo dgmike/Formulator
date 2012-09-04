@@ -56,8 +56,33 @@ class Apolo_Component_Formulator_Element_Select
      */
     public $validAttributes = array(
         'default' => array('name'),
-        'label' => array('name'),
-        'select'  => array('autofocus', 'disabled', 'form', 'multiple', /*'name', // this is used in default */ 'size'),
+        'label'   => array('name'),
+        'select'  => array(
+            // based on
+            // http://www.w3.org/TR/2012/WD-html5-20120329/the-select-element.html#the-select-element
+            'autofocus', 'disabled', 'form', 'multiple',
+            /*'name', // this is used in default */
+            'required', 'size',
+            // global attributes
+            // http://www.w3.org/TR/2012/WD-html5-20120329/global-attributes.html#global-attributes
+            'accesskey', 'class', 'contenteditable', 'contextmenu', 'dir',
+            'draggable', 'dropzone', 'hidden', 'id', 'lang', 'spellcheck',
+            'style', 'tabindex', 'title', 'translate',
+            // event attributes
+            'onabort', 'onblur', 'oncanplay', 'oncanplaythrough',
+            'onchange', 'onclick', 'oncontextmenu', 'oncuechange',
+            'ondblclick', 'ondrag', 'ondragend', 'ondragenter', 
+            'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 
+            'ondurationchange', 'onemptied', 'onended', 'onerror', 
+            'onfocus', 'oninput', 'oninvalid', 'onkeydown', 'onkeypress', 
+            'onkeyup', 'onload', 'onloadeddata', 'onloadedmetadata', 
+            'onloadstart', 'onmousedown', 'onmousemove', 'onmouseout', 
+            'onmouseover', 'onmouseup', 'onmousewheel', 'onpause', 'onplay',
+            'onplaying', 'onprogress', 'onratechange', 'onreset',
+            'onscroll', 'onseeked', 'onseeking', 'onselect', 'onshow', 
+            'onstalled', 'onsubmit', 'onsuspend', 'ontimeupdate', 
+            'onvolumechange', 'onwaiting',
+        ),
     );
     
     /**

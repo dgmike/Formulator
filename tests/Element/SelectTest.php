@@ -77,6 +77,7 @@ class Apolo_Component_Formulator_Element_SelectTest
             'multiple'  => 'multiple',
             'size'      => 5,
             'autofocus' => 'autofocus',
+            'required'  => 'required',
             'values'    => array(
                 'win'   => 'Windows',
                 'linux' => 'Linux',
@@ -86,7 +87,7 @@ class Apolo_Component_Formulator_Element_SelectTest
         $expected = '<label>' . PHP_EOL
                   . '    <span>' . PHP_EOL
                   . '    </span>' . PHP_EOL
-                  . '    <select name="os" multiple="multiple" size="5" autofocus="autofocus">' . PHP_EOL
+                  . '    <select name="os" multiple="multiple" size="5" autofocus="autofocus" required="required">' . PHP_EOL
                   . '        <option value="win">' . PHP_EOL 
                   . '            Windows' . PHP_EOL
                   . '        </option>' . PHP_EOL

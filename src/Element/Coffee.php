@@ -16,7 +16,7 @@ class Apolo_Component_Formulator_Element_Coffee
             $this->form->addMedia('coffee-script.js');
         }
         if (empty($element['content'])) {
-            throw new InvalidArgumentException('Mustache element needs "content"');
+            throw new InvalidArgumentException('Coffe(Script) element needs "content"');
         }
         $this->setSubElements(
             array(

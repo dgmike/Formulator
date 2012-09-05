@@ -15,38 +15,31 @@ class Apolo_Component_Formulator_Element_Select_Option
     {
         if($this->form) {
             $values = $this->form->getValues();
-
-
-
-            if(array_key_exists($element['name'], $values)) {
+            if (   !empty($element['name'])
+                && array_key_exists($element['name'], $values)
+            ) {
                 $values = $values[$element['name']];
             } else {
                 $values = array();
             }
-
             if(is_string($values)) {
                 $values = array($values);
             }
-
             if(!empty($element['_value']) && in_array($element['_value'], $values)) {
                 $element['selected'] = 'selected';
             }
-
         }
-
         foreach (array('value', 'label') as $item) {
             if (!isset($element[$item]) || !is_scalar($element[$item])) {
                 throw new DomainException("Option must have a '$item'");
             }
             $this->setAttribute('default', $item, $element[$item]);
         }
-
         foreach ($element as $key=>$value) {
             if ($this->validAttribute('option', $key)) {
                 $this->setAttribute('option', $key, $value);
             }
         }
-
         if(!empty($element['_value'])) {
             $this->setAttribute('option', 'value', $element['_value']);
         }

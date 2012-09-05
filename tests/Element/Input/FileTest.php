@@ -51,7 +51,7 @@ class Apolo_Component_Formulator_Element_Input_FileTest
                   . '    <span>' . PHP_EOL
                   . '        Linux' . PHP_EOL
                   . '    </span>' . PHP_EOL
-                  . '    <input type="file" name="input_test" disabled="disabled" accept="image/*" multiple="multiple" />' . PHP_EOL
+                  . '    <input type="file" name="input_test" accept="image/*" multiple="multiple" disabled="disabled" />' . PHP_EOL
                   . '</label>';
         $this->assertEquals($expected, $this->form->render('elements'));
     }

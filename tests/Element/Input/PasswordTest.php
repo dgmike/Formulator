@@ -26,6 +26,22 @@ class Apolo_Component_Formulator_Element_Input_PasswordTest
         $this->form->addElement(array(
             'type'  => 'input_password',
             'name'  => 'input_test',
+            'label' => 'Linux',
+        ));
+        $expected = '<label>' . PHP_EOL
+                  . '    <span>' . PHP_EOL
+                  . '        Linux' . PHP_EOL
+                  . '    </span>' . PHP_EOL
+                  . '    <input type="password" name="input_test" />' . PHP_EOL
+                  . '</label>';
+        $this->assertEquals($expected, $this->form->render('elements'));
+    }
+    
+    public function testPasswordNeverHaveValue()
+    {
+        $this->form->addElement(array(
+            'type'  => 'input_password',
+            'name'  => 'input_test',
             'value' => 'linux',
             'label' => 'Linux',
         ));
@@ -33,7 +49,7 @@ class Apolo_Component_Formulator_Element_Input_PasswordTest
                   . '    <span>' . PHP_EOL
                   . '        Linux' . PHP_EOL
                   . '    </span>' . PHP_EOL
-                  . '    <input type="password" name="input_test" value="linux" />' . PHP_EOL
+                  . '    <input type="password" name="input_test" />' . PHP_EOL
                   . '</label>';
         $this->assertEquals($expected, $this->form->render('elements'));
     }

@@ -28,8 +28,7 @@ class Apolo_Component_Formulator_Element_TextareaTest
             . PHP_EOL . '    <span>'
             . PHP_EOL . '        Descri&ccedil;&atilde;o'
             . PHP_EOL . '    </span>'
-            . PHP_EOL . '    <textarea rows="100" cols="200" name="descricao" readonly="readonly" disabled="disabled">'
-            . PHP_EOL . '    </textarea>'
+            . PHP_EOL . '    <textarea rows="100" cols="200" name="descricao" readonly="readonly" disabled="disabled"></textarea>'
             . PHP_EOL . '</label>',
             $this->form->render('elements')
         );
@@ -49,9 +48,7 @@ class Apolo_Component_Formulator_Element_TextareaTest
             . PHP_EOL . '    <span>'
             . PHP_EOL . '        Descri&ccedil;&atilde;o'
             . PHP_EOL . '    </span>'
-            . PHP_EOL . '    <textarea name="descricao">'
-            . PHP_EOL . '        descri&ccedil;&atilde;o &quot;completa&quot;'
-            . PHP_EOL . '    </textarea>'
+            . PHP_EOL . '    <textarea name="descricao">descri&ccedil;&atilde;o &quot;completa&quot;</textarea>'
             . PHP_EOL . '</label>',
             $this->form->render('elements')
         );

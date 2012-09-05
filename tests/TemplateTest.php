@@ -342,7 +342,7 @@ class Apolo_Component_Formulator_TemplateTest
     public function testRender4()
     {
         $element = $this->getMock('stdClass', array(
-            'setParent'
+            'setParent', 'attribute'
         ));
         $element->templateType = 'html';
         $element->subElements = $this->html;

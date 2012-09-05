@@ -29,12 +29,7 @@ class Apolo_Component_Formulator_Element_Input_HiddenTest
             'value' => 'linux',
             'label' => 'Linux',
         ));
-        $expected = '<label>' . PHP_EOL
-                  . '    <span>' . PHP_EOL
-                  . '        Linux' . PHP_EOL
-                  . '    </span>' . PHP_EOL
-                  . '    <input type="hidden" name="input_test" value="linux" />' . PHP_EOL
-                  . '</label>';
+        $expected = '<input type="hidden" name="input_test" value="linux" />';
         $this->assertEquals($expected, $this->form->render('elements'));
     }
 
@@ -47,12 +42,7 @@ class Apolo_Component_Formulator_Element_Input_HiddenTest
             'label'       => 'Linux',
             'disabled'    => 'disabled',
         ));
-        $expected = '<label>' . PHP_EOL
-                  . '    <span>' . PHP_EOL
-                  . '        Linux' . PHP_EOL
-                  . '    </span>' . PHP_EOL
-                  . '    <input type="hidden" name="input_test" value="linux" disabled="disabled" />' . PHP_EOL
-                  . '</label>';
+        $expected = '<input type="hidden" name="input_test" value="linux" disabled="disabled" />';
         $this->assertEquals($expected, $this->form->render('elements'));
     }
 }

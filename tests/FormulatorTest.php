@@ -414,7 +414,7 @@ class Apolo_Component_FormulatorTest
     {
         $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
         $this->setExpectedException(
-            'PHPUnit_Framework_Error_Warning'
+            'DomainException'
         );
         $this->object->addElement(array(
             'type' => $type,

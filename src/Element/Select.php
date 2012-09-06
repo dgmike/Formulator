@@ -108,6 +108,7 @@ class Apolo_Component_Formulator_Element_Select
             $name = sprintf('<span>%s</span>', (string) $element['label']);
             $this->setAttribute('label', 'name', $name);
         }
+        $_value = empty($element['value']) ? array() : $element['value'];
         if (!empty($element['values']) && is_array($element['values'])) {
             $options = array();
             foreach ($element['values'] as $value => $label) {

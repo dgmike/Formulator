@@ -111,4 +111,70 @@ class Apolo_Component_Formulator_Element_SelectTest
                   . '</label>';
         $this->assertEquals($expected, $this->form->render('elements'));
     }
+
+    public function testCreateWithValue()
+    {
+        $this->form->config(array(
+            'values' => array(
+                'sex' => 'f',
+            )
+        ));
+        $this->form->addElement(array(
+            'type' => 'select',
+            'name' => 'sex',
+            'values' => array(
+                'm' => 'Male',
+                'f' => 'Female',
+            ),
+        ));
+        $expected = '<label>' . PHP_EOL
+                  . '    <select name="sex">' . PHP_EOL
+                  . '        <option value="m">' . PHP_EOL
+                  . '            Male' . PHP_EOL
+                  . '        </option>' . PHP_EOL
+                  . '        <option value="f" selected="selected">' . PHP_EOL
+                  . '            Female' . PHP_EOL
+                  . '        </option>' . PHP_EOL
+                  . '    </select>' . PHP_EOL
+                  . '</label>';
+        $this->assertEquals($expected, $this->form->render('elements'));
+    }
+
+    public function testCreateWithMultipleValue()
+    {
+        $this->form->config(
+            array(
+                'values' => array(
+                    'coffee' => array(
+                        'expresso', 'latte'
+                    ),
+                ),
+            )
+        );
+        $this->form->addElement(array(
+            'type' => 'select',
+            'name' => 'coffee',
+            'multiple' => 'multiple',
+            'size' => 5,
+            'values' => array(
+                'expresso' => 'Expresso',
+                'venti'    => 'Venti',
+                'latte'    => 'Latte',
+            ),
+        ));
+        $expected = '<label>' . PHP_EOL
+                  . '    <select name="coffee" multiple="multiple" size="5">' . PHP_EOL
+                  . '        <option value="expresso" selected="selected">' . PHP_EOL
+                  . '            Expresso' . PHP_EOL
+                  . '        </option>' . PHP_EOL
+                  . '        <option value="venti">' . PHP_EOL
+                  . '            Venti' . PHP_EOL
+                  . '        </option>' . PHP_EOL
+                  . '        <option value="latte" selected="selected">' . PHP_EOL
+                  . '            Latte' . PHP_EOL
+                  . '        </option>' . PHP_EOL
+                  . '    </select>' . PHP_EOL
+                  . '</label>';
+        $this->assertEquals($expected, $this->form->render('elements'));
+    }
 }

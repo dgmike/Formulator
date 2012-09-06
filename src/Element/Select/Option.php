@@ -29,19 +29,19 @@ class Apolo_Component_Formulator_Element_Select_Option
                 $element['selected'] = 'selected';
             }
         }
-        foreach (array('value', 'label') as $item) {
+        if (!empty($element['_value'])) {
+            $element['value'] = $element['_value'];
+        }
+        foreach (array('label', 'value') as $item) {
             if (!isset($element[$item]) || !is_scalar($element[$item])) {
                 throw new DomainException("Option must have a '$item'");
             }
             $this->setAttribute('default', $item, $element[$item]);
         }
         foreach ($element as $key=>$value) {
-            if ($this->validAttribute('option', $key)) {
+            if ($this->validAttribute('option', $key) && is_scalar($value)) {
                 $this->setAttribute('option', $key, $value);
             }
-        }
-        if(!empty($element['_value'])) {
-            $this->setAttribute('option', 'value', $element['_value']);
         }
     }
 }

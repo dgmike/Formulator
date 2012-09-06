@@ -13,7 +13,7 @@ class Apolo_Component_Formulator_Element_Select_Option
 
     public function setElement(array $element)
     {
-        if($this->form) {
+        if ($this->form) {
             $values = $this->form->getValues();
             if (   !empty($element['name'])
                 && array_key_exists($element['name'], $values)
@@ -22,10 +22,10 @@ class Apolo_Component_Formulator_Element_Select_Option
             } else {
                 $values = array();
             }
-            if(is_string($values)) {
+            if (is_string($values)) {
                 $values = array($values);
             }
-            if(!empty($element['_value']) && in_array($element['_value'], $values)) {
+            if (!empty($element['_value']) && in_array($element['_value'], $values)) {
                 $element['selected'] = 'selected';
             }
         }
